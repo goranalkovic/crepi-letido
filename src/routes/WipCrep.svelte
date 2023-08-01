@@ -31,13 +31,15 @@
 			moveFlip = false;
 		}
 	});
+
+	let darkMode = false;
 </script>
 
 {#if model?.scene}
 	<SC.Canvas
 		antialias
-		background={new THREE.Color('papayawhip')}
-		fog={new THREE.FogExp2('papayawhip', 0.015)}
+		background={new THREE.Color(darkMode ? 0x100C08 : 'papayawhip')}
+		fog={new THREE.FogExp2(darkMode ? 0x100C08 : 'papayawhip', 0.015)}
 		shadows
 	>
 		<SC.Primitive
@@ -47,12 +49,18 @@
 			rotation={[spin, 0, 0]}
 		/>
 		<SC.PerspectiveCamera position={[-4, -4, 80]} zoom={1} fov={35} />
-		<SC.DirectionalLight intensity={2} position={[-1, 3, 2]} shadow={{ mapSize: [2048, 2048] }} />
+		<SC.DirectionalLight intensity={darkMode ? 0.8 : 2} position={[-1, 3, 2]} shadow={{ mapSize: [2048, 2048] }} />
 		<SC.Primitive
-			object={new THREE.GridHelper(400, 400, 0xD0C3AE, 0xD0C3AE)}
+			object={new THREE.GridHelper(400, 400, 0x3D301F, 0x3D301F)}
 			position={[0, -10, 0]}
 		/>
 	</SC.Canvas>
+
+	<div class="fixed top-4 right-4">
+		<button class:text-amber-400={darkMode} on:click={() => darkMode = !darkMode}>Noć / dan</button>
+	</div>
 {:else}
-	Črep se fčitava...
+	<div class="flex items-center justify-center bg-zinc-900 text-zinc-200 h-screen text-8xl">
+		Črep se fčitava...
+	</div>
 {/if}
