@@ -56,7 +56,10 @@
 				'content-type': 'application/json'
 			}
 		});
+
 		const data = await response.json();
+
+		console.log(data);
 
 		goto('/gableci/results');
 	};
@@ -66,7 +69,9 @@
 	<h1 class="text-6xl font-semibold tracking-tight">Ke bumo denes jeli?</h1>
 </div>
 
-<a class="btn btn-outline btn-sm fixed top-4 right-4 normal-case" href="/gableci/results">Rezultati</a>
+<a class="btn btn-outline btn-sm fixed top-4 right-4 normal-case" href="/gableci/results"
+	>Rezultati</a
+>
 
 {#await getData()}
 	<div class="w-full py-40 flex items-center justify-center">
@@ -90,7 +95,7 @@
 			</a>
 		</div>
 	{:else}
-		<div class="flex flex-wrap gap-8 p-10 justify-center">
+		<div class:pb-40={!allowSubmit} class="flex flex-wrap gap-8 p-10 justify-center">
 			{#each value.restaurants as restaurant}
 				<div class="card w-full max-w-md bg-base-100 shadow-xl">
 					<div class="card-body">
