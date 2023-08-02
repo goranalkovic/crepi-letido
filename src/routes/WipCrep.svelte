@@ -56,9 +56,8 @@
 		/>
 	</SC.Canvas>
 
-	<div class="fixed top-4 right-4">
-		<button class:text-amber-400={darkMode} on:click={() => darkMode = !darkMode}>Noć / dan</button>
-	</div>
+		<button class="fixed top-4 left-4 btn btn-sm btn-outline normal-case" on:click={() => darkMode = !darkMode}>Dan ili noć?</button>
+		<a href="/gableci" class="fixed top-4 right-4 btn btn-sm btn-outline normal-case">Gableci</a>
 {:else}
 	<div class="flex items-center justify-center bg-zinc-900 text-zinc-200 h-screen text-8xl">
 		Črep se fčitava...
