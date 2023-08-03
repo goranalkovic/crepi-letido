@@ -86,6 +86,16 @@ export async function GET() {
 				delivery: 'G',
 			},
 		},
+		{
+			name: 'Ke god hoćeš',
+			slug: 'custom-order',
+			meals: [
+				{ name: 'Odaberi me' },
+			],
+			meta: {
+				delivery: 'Kegod',
+			},
+		},
 	];
 
 	return json({
