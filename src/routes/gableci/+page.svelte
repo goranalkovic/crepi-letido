@@ -27,7 +27,7 @@
 		return data;
 	};
 
-	$: allowSubmit = Object.values(selections).some((r) => r.some((m) => m));
+	$: allowSubmit = Object.values(selections)?.some((r) => r.some((m) => m)) ?? false;
 
 	let yourName = '';
 
