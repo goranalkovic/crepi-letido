@@ -31,21 +31,21 @@ export async function GET() {
 		const mealsRaw = restaurant.querySelector('ul.list-jela');
 		const metaRaw = restaurant.querySelector('.restoran__meta');
 
-		const cijenaRaw = mealData.querySelector('.cijena');
-
-		if (!cijenaRaw) {
-			return null;
-		}
-
 		const output = {
 			name: titleRaw?.innerText.trim(),
 			slug: titleRaw?.getAttribute('href')?.replace('https://gableci.hr/restoran', '').replaceAll('/', ''),
-			meals: mealsRaw?.querySelectorAll('li.food-type').map((mealData) => {
+			meals: mealsRaw?.querySelectorAll('li.food-type')?.map((mealData) => {
+				const rawPrice = mealData.querySelector('.cijena');
+
+				if (!rawPrice) {
+					return null;
+				}
+
 				return {
 					name: mealData.querySelector('.naziv-jela')?.innerText.trim(),
-					price: cijenaRaw?.innerText.trim(),
+					price: rawPrice?.innerText.trim(),
 				}
-			}).filter(({ name, price }) => Boolean(name) && Boolean(price)),
+			}).filter(Boolean).filter(({ name, price }) => Boolean(name) && Boolean(price)),
 			meta: {
 				phone: metaRaw?.querySelector('.restoran__tel')?.innerText.trim(),
 				delivery: metaRaw?.querySelector('.restoran__delivery')?.innerText?.trim() ?? metaRaw?.querySelector('.restoran__legenda')?.innerText?.trim() ?? '',
@@ -61,7 +61,7 @@ export async function GET() {
 		}
 
 		return output;
-	}).filter(Boolean);
+	});
 
 	const additionalRestaurants = [
 		{
