@@ -78,6 +78,7 @@
 		<span class="loading loading-spinner loading-lg" />
 	</div>
 {:then value}
+	{console.log({value})}
 	{#if !value}
 		<div class="w-full py-40 flex flex-col gap-4 items-center justify-center">
 			<div class="alert alert-error text-white dark:text-black w-96">
