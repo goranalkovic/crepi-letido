@@ -52,7 +52,7 @@ export async function GET() {
 						isVegan: isVegan,
 					}
 				}
-			}).filter(Boolean).filter(({ name, price }) => Boolean(name) && Boolean(price)),
+			}).filter(({ name, price }) => Boolean(name) && Boolean(price)),
 			meta: {
 				phone: metaRaw?.querySelector('.restoran__tel')?.innerText?.trim(),
 				delivery: metaRaw?.querySelector('.restoran__delivery')?.innerText?.trim() ?? metaRaw?.querySelector('.restoran__legenda')?.innerText?.trim() ?? '',
