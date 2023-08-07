@@ -42,7 +42,7 @@
 						?.filter(Boolean)
 						?.join(',');
 
-					if (selections?.length < 1) {
+					if (!selections || selections?.length < 1) {
 						return current;
 					}
 

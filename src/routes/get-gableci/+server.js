@@ -105,7 +105,7 @@ export async function GET() {
 	];
 
 	return json({
-		restaurants: [...restaurantData, ...additionalRestaurants],
+		restaurants: [ ...additionalRestaurants],
 		legend: {},
 		veggieMeals: [],
 	});
