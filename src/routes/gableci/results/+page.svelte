@@ -144,7 +144,11 @@
 
 								<ul class="text-xs leading-tight space-y-2">
 									{#each rawData.choices[person][restName].split(',') as index}
-										<li class="">{restData[restName].meals[index - 1].name}</li>
+										{@const mealPrice = restData[restName].meals[index - 1].price}
+										<li class="">
+											{restData[restName].meals[index - 1].name}
+											<span class="badge badge-ghost mt-0.5 px-1.5">{mealPrice.slice(0, mealPrice.indexOf('(') - 1).trim()}</span>
+										</li>
 									{/each}
 								</ul>
 							{/each}
