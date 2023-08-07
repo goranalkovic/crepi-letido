@@ -143,7 +143,6 @@
 											</span>
 
 											{#if meal.price}
-												<br />
 												<span class="badge badge-ghost mt-0.5 px-1.5">{meal.price}</span>
 											{/if}
 										</span>
