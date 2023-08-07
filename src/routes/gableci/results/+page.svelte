@@ -109,7 +109,7 @@
 					<div class="card-body items-center text-center">
 						<h2 class="card-title">{restData[restName].name}</h2>
 
-						<div class="card-actions justify-between text-sm">
+						<div class="card-actions items-center text-sm gap-8">
 							{#if restData[restName].meta.phone}
 								<div class="flex items-center gap-2">
 									<Phone color="currentColor" size="20" weight="duotone" />
