@@ -149,7 +149,7 @@
 											{restData[restName].meals[index - 1].name}
 											
 											{#if mealPrice}
-											<span class="badge badge-ghost mt-0.5 px-1.5">{mealPrice}</span>
+											<span class="badge badge-ghost mt-0.5 px-1.5 shrink-0">{mealPrice}</span>
 											{/if}
 										</li>
 									{/each}
