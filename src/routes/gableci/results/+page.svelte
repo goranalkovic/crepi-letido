@@ -144,10 +144,9 @@
 
 								<ul class="text-xs leading-tight space-y-2">
 									{#each rawData.choices[person][restName].split(',') as index}
-										{@const mealPrice = restData[restName].meals[index - 1].price}
 										<li>
 											{restData[restName].meals[index - 1].name}
-											<span class="badge badge-ghost mt-0.5 px-1.5">{mealPrice.replace(/\(.*\s*\)/g, '').trim()}</span>
+											<span class="badge badge-ghost mt-0.5 px-1.5">{restData?.[restName]?.meals[index - 1]?.name?.replace(/\(.*\s*\)/g, '')?.trim() ?? ''}</span>
 										</li>
 									{/each}
 								</ul>
