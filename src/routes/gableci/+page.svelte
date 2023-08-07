@@ -17,7 +17,7 @@
 		const response = await fetch('/get-gableci');
 		const data = await response.json();
 
-		selections = data.restaurants.filter(Boolean).reduce((current, { slug, meals }) => {
+		selections = data?.restaurants?.filter(Boolean)?.reduce((current, { slug, meals }) => {
 			return {
 				...current,
 				[slug]: Array(meals.length).fill(false)
@@ -36,11 +36,11 @@
 			method: 'POST',
 			body: JSON.stringify({
 				name: yourName,
-				selections: Object.entries(selections).filter(Boolean).reduce((current, [key, value]) => {
+				selections: Object.entries(selections)?.filter(Boolean)?.reduce((current, [key, value]) => {
 					const selections = value
-						.map((item, i) => (item ? i + 1 : null))
-						.filter(Boolean)
-						.join(',');
+						.?map((item, i) => (item ? i + 1 : null))
+						.?filter(Boolean)
+						.?join(',');
 
 					if (selections?.length < 1) {
 						return current;

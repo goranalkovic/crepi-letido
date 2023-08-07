@@ -11,7 +11,7 @@
 		const response = await fetch('/db');
 		const { restData, dbData: data } = await response.json();
 
-		const mappedData = data.reduce((current, item) => {
+		const mappedData = data?.reduce((current, item) => {
 			let newIntersects = { ...current.intersectHelper };
 
 			Object.keys(item.selections).forEach((sel) => {
