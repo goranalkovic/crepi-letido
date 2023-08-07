@@ -41,8 +41,8 @@ export async function GET() {
 					return null;
 				}
 
-				const isVegetarian = meal?.classList?.contains('food-type--vegetarijansko');
-				const isVegan = meal?.classList?.contains('food-type--vegetarijansko');
+				const isVegetarian = mealData?.classList?.contains('food-type--vegetarijansko');
+				const isVegan = mealData?.classList?.contains('food-type--vegetarijansko');
 
 				return {
 					name: mealData.querySelector('.naziv-jela')?.innerText?.trim(),
