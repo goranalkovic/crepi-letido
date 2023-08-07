@@ -147,7 +147,7 @@
 										{@const mealPrice = restData[restName].meals[index - 1].price}
 										<li>
 											{restData[restName].meals[index - 1].name}
-											<span class="badge badge-ghost mt-0.5 px-1.5">{mealPrice.slice(0, mealPrice.indexOf('(') - 1).trim()}</span>
+											<span class="badge badge-ghost mt-0.5 px-1.5">{mealPrice.replace(/\(.*\s*\)/g, '').trim()}</span>
 										</li>
 									{/each}
 								</ul>
