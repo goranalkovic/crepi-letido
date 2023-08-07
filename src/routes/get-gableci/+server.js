@@ -41,16 +41,16 @@ export async function GET() {
 					return null;
 				}
 
-				const isVegetarian = mealData?.classList?.contains('food-type--vegetarijansko');
-				const isVegan = mealData?.classList?.contains('food-type--vegetarijansko');
+				// const isVegetarian = mealData?.classList?.contains('food-type--vegetarijansko');
+				// const isVegan = mealData?.classList?.contains('food-type--vegetarijansko');
 
 				return {
 					name: mealData.querySelector('.naziv-jela')?.innerText?.trim(),
 					price: rawPrice?.innerText?.trim(),
-					meta: {
-						isVegetarian : isVegetarian,
-						isVegan: isVegan,
-					}
+					// meta: {
+					// 	isVegetarian : isVegetarian,
+					// 	isVegan: isVegan,
+					// }
 				}
 			}).filter(({ name, price }) => Boolean(name) && Boolean(price)),
 			meta: {
