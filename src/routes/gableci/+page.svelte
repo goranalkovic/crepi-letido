@@ -59,8 +59,6 @@
 
 		const data = await response.json();
 
-		console.log(data);
-
 		goto('/gableci/results');
 	};
 </script>
@@ -69,16 +67,13 @@
 	<h1 class="text-6xl font-semibold tracking-tight">Ke bumo denes jeli?</h1>
 </div>
 
-<a class="btn btn-outline btn-sm fixed top-4 right-4 normal-case" href="/gableci/results"
-	>Rezultati</a
->
+<a class="btn btn-outline btn-sm fixed top-4 right-4 normal-case" href="/gableci/results">Rezultati</a>
 
 {#await getData()}
 	<div class="w-full py-40 flex items-center justify-center">
 		<span class="loading loading-spinner loading-lg" />
 	</div>
 {:then value}
-	{console.log({value})}
 	{#if !value}
 		<div class="w-full py-40 flex flex-col gap-4 items-center justify-center">
 			<div class="alert alert-error text-white dark:text-black w-96">

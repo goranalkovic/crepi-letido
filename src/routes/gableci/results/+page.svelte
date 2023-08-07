@@ -4,6 +4,9 @@
 	import Intersect from 'phosphor-svelte/lib/Intersect';
 	import Exclude from 'phosphor-svelte/lib/Exclude';
 	import CaretLeft from 'phosphor-svelte/lib/CaretLeft';
+	import Van from 'phosphor-svelte/lib/Van';
+	import Phone from 'phosphor-svelte/lib/Phone';
+	import ForkKnife from 'phosphor-svelte/lib/ForkKnife';
 
 	import { people } from '../people';
 
@@ -105,6 +108,35 @@
 					</figure>
 					<div class="card-body items-center text-center">
 						<h2 class="card-title">{restData[restName].name}</h2>
+
+						<div class="card-actions justify-between text-sm">
+							{#if restData[restName].meta.phone}
+								<div class="flex items-center gap-2">
+									<Phone color="currentColor" size="20" weight="duotone" />
+									{restData[restName].meta.phone}
+								</div>
+							{/if}
+
+							{#if restData[restName].meta.url}
+								<a
+									href={restData[restName].meta.url}
+									target="_blank"
+									rel="noreferrer nofollow"
+									class="btn btn-sm normal-case flex items-center gap-2"
+								>
+									<ForkKnife color="currentColor" size="20" weight="duotone" />
+
+									Pogleč kaj ima
+								</a>
+							{/if}
+
+							{#if restData[restName].meta.delivery}
+								<div class="flex items-center gap-2">
+									<Van color="currentColor" size="20" weight="duotone" />
+									{restData[restName].meta.delivery}
+								</div>
+							{/if}
+						</div>
 
 						<div class="text-left w-full pt-1 mt-4 border-t border-t-base-300">
 							{#each choices as person}
