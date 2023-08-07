@@ -60,8 +60,8 @@ export async function GET() {
 			return null;
 		}
 
-		return output.filter(Boolean);
-	});
+		return output;
+	}).filter(Boolean);
 
 	const additionalRestaurants = [
 		{
@@ -105,7 +105,7 @@ export async function GET() {
 	];
 
 	return json({
-		restaurants: [ ...additionalRestaurants],
+		restaurants: [...restaurantData, ...additionalRestaurants],
 		legend: {},
 		veggieMeals: [],
 	});
