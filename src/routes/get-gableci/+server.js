@@ -31,13 +31,19 @@ export async function GET() {
 		const mealsRaw = restaurant.querySelector('ul.list-jela');
 		const metaRaw = restaurant.querySelector('.restoran__meta');
 
+		const cijenaRaw = mealData.querySelector('.cijena');
+
+		if (!cijenaRaw) {
+			return null;
+		}
+
 		const output = {
 			name: titleRaw?.innerText.trim(),
 			slug: titleRaw?.getAttribute('href')?.replace('https://gableci.hr/restoran', '').replaceAll('/', ''),
 			meals: mealsRaw?.querySelectorAll('li.food-type').map((mealData) => {
 				return {
 					name: mealData.querySelector('.naziv-jela')?.innerText.trim(),
-					price: mealData.querySelector('.cijena')?.innerText.trim(),
+					price: cijenaRaw?.innerText.trim(),
 				}
 			}).filter(({ name, price }) => Boolean(name) && Boolean(price)),
 			meta: {
