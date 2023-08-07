@@ -33,6 +33,7 @@
 		}, {});
 
 		const intersects = Object.keys(mappedData.intersectHelper)
+			.filter(Boolean)
 			.filter((c) => mappedData.intersectHelper[c] === data.length)
 			.reduce((curr, key) => {
 				return {
