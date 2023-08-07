@@ -60,7 +60,7 @@ export async function GET() {
 			return null;
 		}
 
-		return output;
+		return output.filter(Boolean);
 	});
 
 	const additionalRestaurants = [
