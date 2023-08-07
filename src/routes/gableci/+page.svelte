@@ -143,7 +143,7 @@
 											</span>
 
 											{#if meal.price}
-												<span class="badge badge-ghost mt-0.5 px-1.5">{meal.price}</span>
+												<span class="badge badge-ghost mt-0.5 px-1.5 shrink-0">{meal.price}</span>
 											{/if}
 										</span>
 										<input

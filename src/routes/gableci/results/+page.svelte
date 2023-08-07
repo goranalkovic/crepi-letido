@@ -144,9 +144,13 @@
 
 								<ul class="text-xs leading-tight space-y-2">
 									{#each rawData.choices[person][restName].split(',') as index}
-										<li>
+										{@const mealPrice = restData?.[restName]?.meals[index - 1]?.price?.replace(/\(.*\s*\)/g, '')?.trim()}
+										<li class="flex items-center justify-between gap-2">
 											{restData[restName].meals[index - 1].name}
-											<span class="badge badge-ghost mt-0.5 px-1.5">{restData?.[restName]?.meals[index - 1]?.price?.replace(/\(.*\s*\)/g, '')?.trim() ?? ''}</span>
+											
+											{#if mealPrice}
+											<span class="badge badge-ghost mt-0.5 px-1.5">{mealPrice}</span>
+											{/if}
 										</li>
 									{/each}
 								</ul>
