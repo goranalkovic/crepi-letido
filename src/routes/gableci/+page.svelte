@@ -129,7 +129,17 @@
 								<div class="form-control">
 									<label class="label cursor-pointer">
 										<span class="label-text">
-											<span>{meal.name}</span>
+											<span class="flex items-center gap-1">
+												{meal.name}
+
+												{#if meal?.meta?.isVegetarian}
+												<abrr title="Vegetarian">🥬</abrr>
+												{/if}
+
+												{#if meal?.meta?.isVegan}
+												<abrr title="Vegan">🌱</abrr>
+												{/if}
+											</span>
 
 											{#if meal.price}
 												<br />
