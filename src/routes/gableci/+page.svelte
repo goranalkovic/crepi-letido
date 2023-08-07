@@ -38,9 +38,9 @@
 				name: yourName,
 				selections: Object.entries(selections)?.filter(Boolean)?.reduce((current, [key, value]) => {
 					const selections = value
-						.?map((item, i) => (item ? i + 1 : null))
-						.?filter(Boolean)
-						.?join(',');
+						?.map((item, i) => (item ? i + 1 : null))
+						?.filter(Boolean)
+						?.join(',');
 
 					if (selections?.length < 1) {
 						return current;
