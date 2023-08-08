@@ -59,7 +59,7 @@ export async function GET() {
 			}
 		}
 
-		if (slug === 'coral-croatia') {
+		if (output.slug === 'coral-croatia') {
 			output = {
 				...output,
 				meals: [
