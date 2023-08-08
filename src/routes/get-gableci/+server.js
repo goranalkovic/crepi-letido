@@ -31,7 +31,7 @@ export async function GET() {
 		const mealsRaw = restaurant.querySelector('ul.list-jela');
 		const metaRaw = restaurant.querySelector('.restoran__meta');
 
-		const output = {
+		let output = {
 			name: titleRaw?.innerText?.trim(),
 			slug: titleRaw?.getAttribute('href')?.replace('https://gableci.hr/restoran', '').replaceAll('/', ''),
 			meals: mealsRaw?.querySelectorAll('li.food-type')?.map((mealData) => {
@@ -57,6 +57,27 @@ export async function GET() {
 				phone: metaRaw?.querySelector('.restoran__tel')?.innerText?.trim(),
 				delivery: metaRaw?.querySelector('.restoran__delivery')?.innerText?.trim() ?? metaRaw?.querySelector('.restoran__legenda')?.innerText?.trim() ?? '',
 			}
+		}
+
+		if (slug === 'coral-croatia') {
+			output = {
+				...output,
+				meals: [
+					...output.meals,
+					{
+						name: 'Neakaj z dodatne ponude',
+						price: '-',
+						meta: {
+							isVegetarian : false,
+							isVegan: false,
+						}
+					}
+				],
+				meta: {
+					...output.meta,
+					url: '/coral-dodatna-ponuda.pdf',
+				},
+			};
 		}
 
 		if (
