@@ -110,24 +110,24 @@
 						<h2 class="card-title">{restData[restName].name}</h2>
 
 						<div class="card-actions items-center text-sm gap-8">
-							{#if restData[restName].meta.phone}
-								<div class="flex items-center gap-2">
-									<Phone color="currentColor" size="20" weight="duotone" />
-									{restData[restName].meta.phone}
-								</div>
-							{/if}
-
 							{#if restData[restName].meta.url}
 								<a
 									href={restData[restName].meta.url}
 									target="_blank"
 									rel="noreferrer nofollow"
-									class="btn btn-sm normal-case flex items-center gap-2"
+									class="btn btn-xs normal-case flex items-center gap-2"
 								>
 									<ForkKnife color="currentColor" size="20" weight="duotone" />
 
 									Pogleč kaj ima
 								</a>
+							{/if}
+
+							{#if restData[restName].meta.phone}
+								<div class="flex items-center gap-2">
+									<Phone color="currentColor" size="20" weight="duotone" />
+									{restData[restName].meta.phone}
+								</div>
 							{/if}
 
 							{#if restData[restName].meta.delivery}

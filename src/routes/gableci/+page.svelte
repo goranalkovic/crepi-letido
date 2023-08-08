@@ -98,24 +98,24 @@
 					<div class="card-body">
 						<h2 class="card-title">{restaurant.name}</h2>
 						<div class="card-actions justify-between text-sm">
-							{#if restaurant.meta.phone}
-								<div class="flex items-center gap-2">
-									<Phone color="currentColor" size="20" weight="duotone" />
-									{restaurant.meta.phone}
-								</div>
-							{/if}
-
 							{#if restaurant.meta.url}
 								<a
 									href={restaurant.meta.url}
 									target="_blank"
 									rel="noreferrer nofollow"
-									class="btn btn-sm normal-case flex items-center gap-2"
+									class="btn btn-xs normal-case flex items-center gap-2"
 								>
 									<ForkKnife color="currentColor" size="20" weight="duotone" />
 
 									Pogleč kaj ima
 								</a>
+							{/if}
+
+							{#if restaurant.meta.phone}
+								<div class="flex items-center gap-2">
+									<Phone color="currentColor" size="20" weight="duotone" />
+									{restaurant.meta.phone}
+								</div>
 							{/if}
 
 							{#if restaurant.meta.delivery}
