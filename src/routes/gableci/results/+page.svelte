@@ -368,9 +368,9 @@
 							{/if}
 						</div>
 
-						<div class="flex flex-col gap-2 my-4 border-t border-gray-200 dark:border-gray-700 divide-y divide-gray-200 dark:divide-gray-700">
+						<div class="flex flex-col gap-2 my-5 border-y border-gray-200 dark:border-gray-700 divide-y divide-gray-200 dark:divide-gray-700">
 							{#each choices as person}
-								<div class="pt-4 pb-2 px-4 sm:px-6">
+								<div class="py-4 px-4 sm:px-6">
 									<div class="flex items-center space-x-4 mb-2">
 										{#if person?.startsWith('ext')}
 											<Avatar size="sm">{person.replace('ext', 'G')}</Avatar>
