@@ -368,18 +368,18 @@
 							{/if}
 						</div>
 
-						<div class="flex flex-col gap-2 my-5 border-y border-gray-200 dark:border-gray-700 divide-y divide-gray-200 dark:divide-gray-700">
+						<div class="flex flex-col my-4 sm:my-6 border-y border-gray-200 dark:border-gray-700 divide-y divide-gray-200 dark:divide-gray-700">
 							{#each choices as person}
 								<div class="py-4 px-4 sm:px-6">
-									<div class="flex items-center space-x-4 mb-2">
+									<div class="flex items-center gap-4 mb-3">
 										{#if person?.startsWith('ext')}
 											<Avatar size="sm">{person.replace('ext', 'G')}</Avatar>
 										{:else}
 											<Avatar size="sm" src={`/profile-pictures/${person}.jpg`} />
 										{/if}
 
-										<div class="space-y-1 font-medium text-lg dark:text-white">
-											<div>{people[person]}</div>
+										<div class="font-medium text-lg dark:text-white">
+											{people[person]}
 										</div>
 									</div>
 
