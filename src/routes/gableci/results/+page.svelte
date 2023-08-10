@@ -322,7 +322,7 @@
 							</h5>
 						</div>
 
-						<div class="font-normal text-gray-500 dark:text-gray-400 flex gap-8 leading-none">
+						<div class="font-normal text-gray-500 dark:text-gray-400 flex gap-8 leading-none px-4 sm:px-6">
 							{#if restData[restName].meta.url && restData[restName].meta.urlType === 'menu'}
 								<Button
 									color="alternative"
@@ -368,7 +368,7 @@
 							{/if}
 						</div>
 
-						<div class="flex flex-col gap-2 my-4 divide-y divide-gray-200 dark:divide-gray-700">
+						<div class="flex flex-col gap-2 my-4 border-t border-gray-200 dark:border-gray-700 divide-y divide-gray-200 dark:divide-gray-700">
 							{#each choices as person}
 								<div class="pt-4 pb-2 px-4 sm:px-6">
 									<div class="flex items-center space-x-4 mb-2">
@@ -404,7 +404,7 @@
 							{/each}
 						</div>
 
-						<Alert border color="red" class="mt-auto p-4">
+						<Alert border color="red" class="mt-auto p-4 mx-4 sm:mx-6 mb-4 sm:mb-6">
 							<p class="font-display text-2xl mb-2">Intersect breakeri</p>
 							<div class="flex -space-x-2">
 								{#each allPickers.filter((p) => !choices.includes(p)) as missingPersonSlug}
