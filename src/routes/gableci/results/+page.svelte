@@ -254,22 +254,22 @@
 								{/if}
 							</div>
 
-							<div class="flex flex-col gap-2 mt-8 divide-y divide-gray-200 dark:divide-gray-700">
+							<div class="flex flex-col gap-2 mt-4 divide-y divide-gray-200 dark:divide-gray-700">
 								{#each choices as person}
 									<div class="pt-4 pb-2 last:pb-0">
-										<div class="flex items-center space-x-4">
+										<div class="flex items-center space-x-4 mb-2">
 											{#if person?.startsWith('ext')}
-												<Avatar>{person.replace('ext', 'G')}</Avatar>
+												<Avatar size="sm">{person.replace('ext', 'G')}</Avatar>
 											{:else}
-												<Avatar src={`/profile-pictures/${person}.jpg`} />
+												<Avatar size="sm" src={`/profile-pictures/${person}.jpg`} />
 											{/if}
 
-											<div class="space-y-1 font-medium dark:text-white">
+											<div class="space-y-1 font-medium text-lg dark:text-white">
 												<div>{people[person]}</div>
 											</div>
 										</div>
 
-										<ul class="w-full flex flex-col gap-3 sm:gap-4">
+										<ul class="w-full flex flex-col gap-2">
 											{#each rawData.choices[person][restName].split(',') as index}
 												{@const mealPrice = restData?.[restName]?.meals[index - 1]?.price
 													?.replace(/\(.*\s*\)/g, '')
@@ -279,7 +279,10 @@
 													<p class="text-base text-gray-500 truncate dark:text-gray-400">
 														{restData[restName].meals[index - 1].name}
 													</p>
-													<Badge large color="dark" class="shrink-0">{mealPrice}</Badge>
+
+													{#if mealPrice?.length > 0}
+														<Badge large color="dark" class="shrink-0">{mealPrice}</Badge>
+													{/if}
 												</li>
 											{/each}
 										</ul>
@@ -365,22 +368,22 @@
 							{/if}
 						</div>
 
-						<div class="flex flex-col gap-2 mt-8 divide-y divide-gray-200 dark:divide-gray-700">
+						<div class="flex flex-col gap-2 mt-4 divide-y divide-gray-200 dark:divide-gray-700">
 							{#each choices as person}
-								<div class="pt-4 pb-2 last:pb-0">
-									<div class="flex items-center space-x-4">
+								<div class="pt-4 pb-2">
+									<div class="flex items-center space-x-4 mb-2">
 										{#if person?.startsWith('ext')}
-											<Avatar>{person.replace('ext', 'G')}</Avatar>
+											<Avatar size="sm">{person.replace('ext', 'G')}</Avatar>
 										{:else}
-											<Avatar src={`/profile-pictures/${person}.jpg`} />
+											<Avatar size="sm" src={`/profile-pictures/${person}.jpg`} />
 										{/if}
 
-										<div class="space-y-1 font-medium dark:text-white">
+										<div class="space-y-1 font-medium text-lg dark:text-white">
 											<div>{people[person]}</div>
 										</div>
 									</div>
 
-									<ul class="w-full flex flex-col gap-3 sm:gap-4">
+									<ul class="w-full flex flex-col gap-2">
 										{#each rawData.choices[person][restName].split(',') as index}
 											{@const mealPrice = restData?.[restName]?.meals[index - 1]?.price
 												?.replace(/\(.*\s*\)/g, '')
@@ -390,7 +393,10 @@
 												<p class="text-base text-gray-500 truncate dark:text-gray-400">
 													{restData[restName].meals[index - 1].name}
 												</p>
-												<Badge large color="dark" class="shrink-0">{mealPrice}</Badge>
+
+												{#if mealPrice?.length > 0}
+													<Badge large color="dark" class="shrink-0">{mealPrice}</Badge>
+												{/if}
 											</li>
 										{/each}
 									</ul>
