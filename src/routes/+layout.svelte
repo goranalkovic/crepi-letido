@@ -3,21 +3,25 @@
 
 	import { fly } from 'svelte/transition';
 	import { circIn, circOut } from 'svelte/easing';
+	import GableciNavbar from '$lib/GableciNavbar.svelte';
+	import GableciFooter from '$lib/GableciFooter.svelte';
 
 	export let data;
 
-    const direction = data.url === '/gableci/results' ? 1 : -1;
+	const direction = data.url === '/gableci/results' ? 1 : -1;
 </script>
 
-<div class="app">
-	<main>
-		{#key data.url}
-			<div
-				in:fly={{ x: direction * -100, duration: 400, delay: 350, easing: circOut }}
-				out:fly={{ x: direction * 100, duration: 300, easing: circIn }}
-			>
-				<slot />
-			</div>
-		{/key}
+<header class="my-8 mx-auto px-8 container sticky top-8">
+	<GableciNavbar />
+</header>
+
+{#key data.url}
+	<main
+		in:fly={{ x: direction * -100, duration: 400, delay: 350, easing: circOut }}
+		out:fly={{ x: direction * 100, duration: 300, easing: circIn }}
+	>
+		<slot />
 	</main>
-</div>
+{/key}
+
+<GableciFooter />

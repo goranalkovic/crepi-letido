@@ -1,5 +1,6 @@
 <script>
-	import WipCrep from './WipCrep.svelte';
+	import { Canvas } from '@threlte/core';
+	import CrepModel from '$lib/CrepModel.svelte';
 </script>
 
 <svelte:head>
@@ -7,4 +8,8 @@
 	<meta name="description" content="Coming soon" />
 </svelte:head>
 
-<WipCrep />
+<div class="fixed inset-0 -z-10">
+	<Canvas>
+		<CrepModel />
+	</Canvas>
+</div>

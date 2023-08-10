@@ -1,18 +1,42 @@
 <script>
 	// @ts-nocheck
 	import CloudX from 'phosphor-svelte/lib/CloudX';
-	import Intersect from 'phosphor-svelte/lib/Intersect';
 	import Exclude from 'phosphor-svelte/lib/Exclude';
-	import CaretLeft from 'phosphor-svelte/lib/CaretLeft';
 	import Van from 'phosphor-svelte/lib/Van';
 	import Phone from 'phosphor-svelte/lib/Phone';
 	import ForkKnife from 'phosphor-svelte/lib/ForkKnife';
+	import Pencil from 'phosphor-svelte/lib/Pencil';
+	import Intersect from 'phosphor-svelte/lib/Intersect';
 
 	import { people } from '../people';
+
+	import {
+		Button,
+		Dropdown,
+		DropdownItem,
+		Avatar,
+		DropdownDivider,
+		Spinner,
+		Card,
+		Heading,
+		P,
+		Span,
+		Alert,
+		GradientButton
+	} from 'flowbite-svelte';
+	import { goto } from '$app/navigation';
+
+	let activeUsers = [];
 
 	const getData = async () => {
 		const response = await fetch('/db');
 		const { restData, dbData: data } = await response.json();
+
+		if (data?.length < 1) {
+			return null;
+		}
+
+		activeUsers = data.map(({ name }) => name);
 
 		const mappedData = data?.reduce((current, item) => {
 			let newIntersects = { ...current.intersectHelper };
@@ -83,137 +107,311 @@
 	};
 </script>
 
-{#await getData()}
-	<div class="w-full py-40 flex items-center justify-center">
-		<span class="loading loading-spinner loading-lg" />
+<div
+	class="container flex flex-wrap justify-center md:justify-between items-center mx-auto px-8 gap-8 mb-10 pt-10 md:mb-20"
+>
+	<div class="max-md:w-full">
+		<Heading
+			tag="h1"
+			class="mb-4"
+			customSize="text-4xl font-bold md:text-5xl lg:text-6xl font-display max-md:text-center"
+		>
+			Rezultati izbora za <Span
+				gradient
+				class="from-purple-600 to-blue-500 dark:from-pink-500 dark:to-orange-400">gablec dana</Span
+			>
+		</Heading>
+		<P class="font-light max-md:text-center">
+			Pogleč ispod ak ima intersektija.
+			<br />
+			Ak ima, super, onda jedan od tih restorana. Ak ne, le fuq.
+		</P>
 	</div>
-{:then { rawData, intersects, nonIntersects, restData }}
-	<a class="btn btn-outline btn-sm flex gap-1 fixed top-4 left-4 normal-case" href="/gableci">
-		<CaretLeft weight='duotone' size='18' color='currentColor' />
-		Buš si još nekaj izabral?
-	</a>
 
-	<div class="p-10 pt-40 flex justify-center">
-		<h1 class="text-6xl font-semibold tracking-tight">Ke bumo denes jeli?</h1>
+	<div>
+		{#if activeUsers?.length > 0}
+			<Button size="lg" color="light" id="person-picker" class="w-48 justify-start gap-2">
+				<Pencil color="currentColor" size="18" />
+				Uredi jela
+			</Button>
+			<Dropdown inline triggeredBy="#person-picker" class="w-48">
+				{#each Object.entries(people).filter(([slug]) => activeUsers.includes(slug)) as [slug, name]}
+					{#if slug === 'ext1'}
+						<DropdownDivider />
+					{/if}
+
+					<DropdownItem
+						class="flex items-center text-base font-semibold gap-2 hover:bg-gray-100 dark:hover:bg-gray-600"
+						on:click={() => goto(`/gableci?edit=${slug}`)}
+					>
+						{#if slug?.startsWith('ext')}
+							<Avatar size="xs">{slug.replace('ext', 'G')}</Avatar>
+						{:else}
+							<Avatar src={`/profile-pictures/${slug}.jpg`} size="xs" />
+						{/if}
+
+						<span>{name}</span>
+					</DropdownItem>
+				{/each}
+			</Dropdown>
+		{/if}
 	</div>
+</div>
 
-	{@const hasIntersect = Object.keys(intersects)?.length > 0}
+<div class="container mx-auto mb-10 md:mb-20 px-8">
+	{#await getData()}
+		<Card padding="xl" shadow rounded class="gap-4 items-center m-auto">
+			<Spinner size="20" />
+			<P>Spij si jenu, ovo bu za čas</P>
+		</Card>
+	{:then fetchedData}
+		{#if !fetchedData}
+			<Card padding="xl" shadow rounded class="gap-4 items-center m-auto">
+				<p class="text-4xl">🦗🦗</p>
+				<P weight="light" class="-mt-5 opacity-20 select-none">(cvrčki)</P>
+				<P size="5xl" class="font-display">Nitko nije odabral...</P>
 
-	{#if hasIntersect}
-		<div class="flex flex-wrap gap-8 p-10 justify-center">
-			{#each Object.entries(intersects) as [restName, choices]}
-				<div class="card w-96 bg-base-100 shadow-xl">
-					<figure class="px-10 pt-10">
-						<Intersect color="currentColor" size="64" weight="duotone" />
-					</figure>
-					<div class="card-body items-center text-center">
-						<h2 class="card-title">{restData[restName].name}</h2>
+				<GradientButton href="/gableci" color="tealToLime" shadow size="xl">
+					Promijeni to
+				</GradientButton>
+			</Card>
+		{:else}
+			{@const { rawData, intersects, nonIntersects, restData } = fetchedData}
+			{@const allPickers = Object.keys(rawData.choices)}
+			{@const hasIntersect = Object.keys(intersects)?.length > 0}
 
-						<div class="card-actions items-center text-sm gap-8">
-							{#if restData[restName].meta.url}
-								<a
+			{#if hasIntersect}
+			<Heading tag="h2" class="mx-auto py-10 font-display flex items-center gap-4">
+				<Intersect size='36' color='currentColor' weight='light' />
+				Intersecti
+			</Heading>
+
+				<div class="flex flex-col sm:grid sm:auto-rows-auto sm:grid-cols-fill-96 gap-8">
+					{#each Object.entries(intersects) as [restName, choices]}
+						<Card class="max-w-none">
+							<div class="flex items-center gap-4">
+								<img
+									src={`/restaurant-icons/${restName}.png`}
+									alt={restData[restName].name}
+									class="w-7 h-7 mb-3"
+								/>
+								<h5
+									class="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white"
+								>
+									{restData[restName].name}
+								</h5>
+							</div>
+
+							<div class="font-normal text-gray-500 dark:text-gray-400 flex gap-8 leading-none">
+								{#if restData[restName].meta.url && restData[restName].meta.urlType === 'menu'}
+									<Button
+										color="alternative"
+										href={restData[restName].meta.url}
+										target="_blank"
+										rel="noreferrer nofollow"
+										size="xs"
+									>
+										<div class="flex items-center gap-2 mt-auto">
+											<ForkKnife color="currentColor" size="20" weight="duotone" />
+											<span>Ponuda jela</span>
+										</div>
+									</Button>
+								{/if}
+
+								{#if restData[restName].meta.url && restData[restName].meta.urlType === 'additional'}
+									<Button
+										color="alternative"
+										href={restData[restName].meta.url}
+										target="_blank"
+										rel="noreferrer nofollow"
+										size="xs"
+									>
+										<div class="flex items-center gap-2 mt-auto">
+											<ForkKnife color="currentColor" size="20" weight="duotone" />
+											<span>Dod. ponuda</span>
+										</div>
+									</Button>
+								{/if}
+
+								{#if restData[restName].meta.phone}
+									<p class="flex items-center gap-2">
+										<Phone color="currentColor" size="24" weight="duotone" />
+										<span class="max-w-[13ch]">{restData[restName].meta.phone}</span>
+									</p>
+								{/if}
+
+								{#if restData[restName].meta.delivery}
+									<p class="flex items-center gap-2">
+										<Van color="currentColor" size="24" weight="duotone" />
+										{restData[restName].meta.delivery}
+									</p>
+								{/if}
+							</div>
+
+							<div class="flex flex-col gap-2 mt-5">
+								{#each choices as person}
+									<h3 class="text-base font-semibold mt-5 mb-1">{people[person]}</h3>
+
+									<ul class="text-xs leading-tight space-y-2">
+										{#each rawData.choices[person][restName].split(',') as index}
+											{@const mealPrice = restData?.[restName]?.meals[index - 1]?.price
+												?.replace(/\(.*\s*\)/g, '')
+												?.trim()}
+											<li class="flex items-center justify-between gap-2">
+												{restData[restName].meals[index - 1].name}
+
+												{#if mealPrice}
+													<span class="badge badge-ghost mt-0.5 px-1.5 shrink-0">{mealPrice}</span>
+												{/if}
+											</li>
+										{/each}
+									</ul>
+								{/each}
+							</div>
+						</Card>
+					{/each}
+				</div>
+			{:else}
+				<Card color="red" class="flex flex-col items-center gap-4 mx-auto">
+					<Exclude color="currentColor" size="64" weight="duotone" />
+					<h5
+						class="mb-2 text-6xl font-display font-semibold tracking-tight text-gray-900 dark:text-white text-center"
+					>
+						Nema intersecta
+					</h5>
+				</Card>
+			{/if}
+
+
+			<Heading tag="h2" class="mx-auto py-10 font-display flex items-center gap-4">
+				<Exclude size='36' color='currentColor' weight='light' />
+				{hasIntersect ? 'Ostali restorani' : 'Backup izbori'}
+			</Heading>
+
+			<div class="flex flex-col sm:grid sm:auto-rows-auto sm:grid-cols-fill-96 gap-8">
+				{#each Object.entries(nonIntersects).sort((a, b) => b[1]?.length - a[1]?.length) as [restName, choices]}
+					<Card class="max-w-none">
+						<div class="flex items-center gap-4">
+							<img
+								src={`/restaurant-icons/${restName}.png`}
+								alt={restData[restName].name}
+								class="w-7 h-7 mb-3"
+							/>
+							<h5 class="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">
+								{restData[restName].name}
+							</h5>
+						</div>
+
+						<div class="font-normal text-gray-500 dark:text-gray-400 flex gap-8 leading-none">
+							{#if restData[restName].meta.url && restData[restName].meta.urlType === 'menu'}
+								<Button
+									color="alternative"
 									href={restData[restName].meta.url}
 									target="_blank"
 									rel="noreferrer nofollow"
-									class="btn btn-xs normal-case flex items-center gap-2"
+									size="xs"
 								>
-									<ForkKnife color="currentColor" size="20" weight="duotone" />
+									<div class="flex items-center gap-2 mt-auto">
+										<ForkKnife color="currentColor" size="20" weight="duotone" />
+										<span>Ponuda jela</span>
+									</div>
+								</Button>
+							{/if}
 
-									Pogleč kaj ima
-								</a>
+							{#if restData[restName].meta.url && restData[restName].meta.urlType === 'additional'}
+								<Button
+									color="alternative"
+									href={restData[restName].meta.url}
+									target="_blank"
+									rel="noreferrer nofollow"
+									size="xs"
+								>
+									<div class="flex items-center gap-2 mt-auto">
+										<ForkKnife color="currentColor" size="20" weight="duotone" />
+										<span>Dod. ponuda</span>
+									</div>
+								</Button>
 							{/if}
 
 							{#if restData[restName].meta.phone}
-								<div class="flex items-center gap-2">
-									<Phone color="currentColor" size="20" weight="duotone" />
-									{restData[restName].meta.phone}
-								</div>
+								<p class="flex items-center gap-2">
+									<Phone color="currentColor" size="24" weight="duotone" />
+									<span class="max-w-[13ch]">{restData[restName].meta.phone}</span>
+								</p>
 							{/if}
 
 							{#if restData[restName].meta.delivery}
-								<div class="flex items-center gap-2">
-									<Van color="currentColor" size="20" weight="duotone" />
+								<p class="flex items-center gap-2">
+									<Van color="currentColor" size="24" weight="duotone" />
 									{restData[restName].meta.delivery}
-								</div>
+								</p>
 							{/if}
 						</div>
 
-						<div class="text-left w-full pt-1 mt-4 border-t border-t-base-300">
+						<div class="flex flex-col gap-2 my-5">
 							{#each choices as person}
 								<h3 class="text-base font-semibold mt-5 mb-1">{people[person]}</h3>
 
 								<ul class="text-xs leading-tight space-y-2">
 									{#each rawData.choices[person][restName].split(',') as index}
-										{@const mealPrice = restData?.[restName]?.meals[index - 1]?.price?.replace(/\(.*\s*\)/g, '')?.trim()}
+										{@const mealPrice = restData?.[restName]?.meals[index - 1]?.price
+											?.replace(/\(.*\s*\)/g, '')
+											?.trim()}
 										<li class="flex items-center justify-between gap-2">
 											{restData[restName].meals[index - 1].name}
-											
+
 											{#if mealPrice}
-											<span class="badge badge-ghost mt-0.5 px-1.5 shrink-0">{mealPrice}</span>
+												<span class="badge badge-ghost mt-0.5 px-1.5 shrink-0">{mealPrice}</span>
 											{/if}
 										</li>
 									{/each}
 								</ul>
 							{/each}
 						</div>
-					</div>
-				</div>
-			{/each}
-		</div>
-	{:else}
-		<div class="p-10 flex justify-center">
-			<div class="card w-96 bg-base-100 shadow-xl">
-				<figure class="px-10 pt-10">
-					<Exclude color="currentColor" size="64" weight="duotone" />
-				</figure>
-				<div class="card-body items-center text-center">
-					<h2 class="card-title">Nema intersecta 🥲</h2>
-				</div>
+
+						<Alert border color="red" class="mt-auto p-4">
+							<p class="font-display text-2xl mb-2">Intersect breakeri</p>
+							<div class="flex -space-x-2">
+								{#each allPickers.filter((p) => !choices.includes(p)) as missingPersonSlug}
+									{#if missingPersonSlug?.startsWith('ext')}
+										<Avatar>{missingPersonSlug.replace('ext', 'G')}</Avatar>
+									{:else}
+										<Avatar src={`/profile-pictures/${missingPersonSlug}.jpg`} />
+									{/if}
+								{/each}
+							</div>
+						</Alert>
+					</Card>
+				{/each}
 			</div>
-		</div>
-	{/if}
-
-	<div class="p-10 pb-2 flex justify-center">
-		<h2 class="text-4xl">
-			{hasIntersect ? 'Ostali restorani' : 'Backup izbori'}
-		</h2>
-	</div>
-
-	<div class="flex flex-wrap gap-8 p-10 pb-40 justify-center">
-		{#each Object.entries(nonIntersects) as [restName, choices]}
-			<div class="card w-96 bg-base-100 shadow-xl">
-				<div class="card-body">
-					<h2 class="card-title">{restData[restName].name}</h2>
-
-					{#each choices as person}
-						<h3 class="text-base font-semibold mt-5 mb-1">{people[person]}</h3>
-
-						<ul class="text-xs leading-tight space-y-2">
-							{#each rawData.choices[person][restName].split(',') as index}
-								<li class="">{restData[restName].meals[index - 1].name}</li>
-							{/each}
-						</ul>
-					{/each}
+		{/if}
+	{:catch error}
+		<div class="w-full py-40 flex flex-col gap-4 items-center justify-center">
+			<Alert color="red" class="w-64 mx-auto">
+				<div class="flex items-center gap-3">
+					<CloudX color="currentColor" size="20" slot="icon" />
+					<span class="text-lg font-medium">Neke je crklo</span>
 				</div>
-			</div>
-		{/each}
-	</div>
-{:catch error}
-	<div class="w-full py-40 flex flex-col gap-4 items-center justify-center">
-		<div class="alert alert-error text-white dark:text-black w-96">
-			<CloudX color="currentColor" size="24" weight="duotone" />
-			<span>Neke je crklo. Pogleč ispod.</span>
+				<p class="mt-2 mb-4 text-sm">
+					Ne znamo ni mi točno kaj je bilo, ali evo errora:
+
+					<details>
+						<summary>Klikni ovdje za detalje</summary>
+						<pre class="font-mono text-sm">{error.message}</pre>
+					</details>
+				</p>
+				<div class="flex gap-2">
+					<Button
+						size="xs"
+						color="red"
+						href="https://gableci.hr/vz/"
+						target="_blank"
+						rel="noreferrer nofollow"
+					>
+						Jæbiga, ideme ručno
+					</Button>
+				</div>
+			</Alert>
 		</div>
-
-		<pre class="font-mono text-sm">{error.message}</pre>
-
-		<a
-			class="btn btn-outline btn-xs normal-case"
-			href="https://gableci.hr/vz/"
-			target="_blank"
-			rel="noreferrer nofollow"
-		>
-			Jæbiga, ideme ručno
-		</a>
-	</div>
-{/await}
+	{/await}
+</div>

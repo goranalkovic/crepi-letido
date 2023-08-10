@@ -1,7 +1,7 @@
 <script>
 	// @ts-nocheck
-	import { slide } from 'svelte/transition';
 	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
 
 	import Van from 'phosphor-svelte/lib/Van';
 	import Phone from 'phosphor-svelte/lib/Phone';
@@ -9,9 +9,56 @@
 	import XCircle from 'phosphor-svelte/lib/XCircle';
 	import PaperPlaneTilt from 'phosphor-svelte/lib/PaperPlaneTilt';
 	import ForkKnife from 'phosphor-svelte/lib/ForkKnife';
+	import ArrowSquareOut from 'phosphor-svelte/lib/ArrowSquareOut';
+	import CheckCircle from 'phosphor-svelte/lib/CheckCircle';
+	import User from 'phosphor-svelte/lib/User';
+
 	import { people } from './people';
 
+	import {
+		Button,
+		Dropdown,
+		DropdownItem,
+		Avatar,
+		DropdownDivider,
+		GradientButton,
+		Checkbox,
+		Spinner,
+		Card,
+		Banner,
+		Heading,
+		P,
+		Span,
+		Alert
+	} from 'flowbite-svelte';
+	import { onMount } from 'svelte';
+
 	let selections = {};
+
+	onMount(async () => {
+		const isInEditMode = $page.url.searchParams.has('edit');
+
+		if (!isInEditMode) {
+			return;
+		}
+
+		const userToEdit = $page.url.searchParams.get('edit');
+
+		const response = await fetch('/db');
+		const { dbData } = await response.json();
+
+		const dbUserData = dbData.find(({name}) => name === userToEdit);
+
+		if (!dbUserData) {
+			return;
+		}
+
+		yourName = userToEdit;
+
+		Object.entries(dbUserData.selections).forEach(([restaurantName, selectedIndexes]) => {
+			selectedIndexes.split(',').map((val) => parseInt(val)).forEach((ind) => selections[restaurantName][ind - 1] = true);
+		});
+	});
 
 	const getData = async () => {
 		const response = await fetch('/get-gableci');
@@ -27,6 +74,7 @@
 		return data;
 	};
 
+	$: numberOfSelections = Object.values(selections)?.flat()?.filter(Boolean)?.length ?? false;
 	$: allowSubmit = Object.values(selections)?.some((r) => r.some((m) => m)) ?? false;
 
 	let yourName = '';
@@ -36,21 +84,23 @@
 			method: 'POST',
 			body: JSON.stringify({
 				name: yourName,
-				selections: Object.entries(selections)?.filter(Boolean)?.reduce((current, [key, value]) => {
-					const selections = value
-						?.map((item, i) => (item ? i + 1 : null))
-						?.filter(Boolean)
-						?.join(',');
+				selections: Object.entries(selections)
+					?.filter(Boolean)
+					?.reduce((current, [key, value]) => {
+						const selections = value
+							?.map((item, i) => (item ? i + 1 : null))
+							?.filter(Boolean)
+							?.join(',');
 
-					if (!selections || selections?.length < 1) {
-						return current;
-					}
+						if (!selections || selections?.length < 1) {
+							return current;
+						}
 
-					return {
-						...current,
-						[key]: selections
-					};
-				}, {})
+						return {
+							...current,
+							[key]: selections
+						};
+					}, {})
 			}),
 			headers: {
 				'content-type': 'application/json'
@@ -63,141 +113,257 @@
 	};
 </script>
 
-<div class="p-10 pt-40 flex justify-center">
-	<h1 class="text-6xl font-semibold tracking-tight">Ke bumo denes jeli?</h1>
+<div
+	class="container flex flex-wrap justify-center md:justify-between items-center mx-auto px-8 gap-8 mb-10 pt-10 md:mb-20"
+>
+	<div class="max-md:w-full">
+		<Heading
+			tag="h1"
+			class="mb-4"
+			customSize="text-4xl font-bold md:text-5xl lg:text-6xl font-display max-md:text-center"
+		>
+			Kaj bumo denes za <Span
+				gradient
+				class="from-purple-600 to-blue-500 dark:from-pink-500 dark:to-orange-400">gablec</Span
+			>?
+		</Heading>
+		<P class="font-light max-md:text-center">
+			Pogleč si jela ispod i uzmi kaj ti se sviđa.
+			<br />
+			Odabiri se budu mogli uređivati poslije ak fulaš nekaj.
+		</P>
+	</div>
+
+	<div>
+		<Button size="lg" color="light" id="person-picker" class="w-48 justify-start">
+			{#if yourName?.startsWith('ext')}
+				<Avatar class="mr-2">{yourName.replace('ext', 'G')}</Avatar>
+			{:else if Object.keys(people).includes(yourName)}
+				<Avatar src={`/profile-pictures/${yourName}.jpg`} class="mr-2" />
+			{:else}
+				<Avatar class="mr-2"><User size="18" color="currentColor" /></Avatar>
+			{/if}
+			{people?.[yourName] ?? 'Koji si ti?'}
+		</Button>
+		<Dropdown inline triggeredBy="#person-picker" class="w-48">
+			{#each Object.entries(people) as [slug, name]}
+				{#if slug === 'ext1'}
+					<DropdownDivider />
+				{/if}
+
+				<DropdownItem
+					class="flex items-center text-base font-semibold gap-2 hover:bg-gray-100 dark:hover:bg-gray-600"
+					on:click={() => (yourName = slug)}
+					disabled={slug === yourName}
+				>
+					{#if slug?.startsWith('ext')}
+						<Avatar size="xs">{slug.replace('ext', 'G')}</Avatar>
+					{:else}
+						<Avatar src={`/profile-pictures/${slug}.jpg`} size="xs" />
+					{/if}
+
+					<span>{name}</span>
+
+					{#if slug === yourName}
+						<span class="ml-auto text-emerald-600 dark:text-lime-400">
+							<CheckCircle color="currentColor" size="20" weight="fill" />
+						</span>
+					{/if}
+				</DropdownItem>
+			{/each}
+		</Dropdown>
+	</div>
 </div>
 
-<a class="btn btn-outline btn-sm fixed top-4 right-4 normal-case" href="/gableci/results">Rezultati</a>
+<div class="container mx-auto mb-10 md:mb-20 px-8">
+	{#await getData()}
+		<Card padding="xl" shadow rounded class="gap-4 items-center m-auto">
+			<Spinner size="20" />
+			<P>Spij si jenu, ovo bu za čas</P>
+		</Card>
+	{:then value}
+		{#if !value}
+			<Alert color="red" class="w-64 mx-auto">
+				<div class="flex items-center gap-3">
+					<XCircle color="currentColor" size="20" slot="icon" />
+					<span class="text-lg font-medium">Neke je crklo</span>
+				</div>
+				<p class="mt-2 mb-4 text-sm">
+					Nema nijenog jela.
+					<br />
+					Reci Gocu da je sjebal.
+				</p>
+				<div class="flex gap-2">
+					<Button
+						size="xs"
+						color="red"
+						href="https://gableci.hr/vz/"
+						target="_blank"
+						rel="noreferrer nofollow"
+					>
+						Jæbiga, ideme ručno
+					</Button>
+				</div>
+			</Alert>
+		{:else}
+			<div class="flex flex-col sm:grid sm:auto-rows-auto sm:grid-cols-fill-96 gap-8">
+				{#each value.restaurants as restaurant}
+					<Card class="max-w-none">
+						<div class="flex items-center gap-4">
+							<img
+								src={`/restaurant-icons/${restaurant.slug}.png`}
+								alt={restaurant.name}
+								class="w-7 h-7 mb-3"
+							/>
+							<h5 class="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">
+								{restaurant.name}
+							</h5>
+						</div>
 
-{#await getData()}
-	<div class="w-full py-40 flex items-center justify-center">
-		<span class="loading loading-spinner loading-lg" />
-	</div>
-{:then value}
-	{@const tst = console.log(value)}
-	{#if !value}
-		<div class="w-full py-40 flex flex-col gap-4 items-center justify-center">
-			<div class="alert alert-error text-white dark:text-black w-96">
-				<XCircle color="currentColor" size="24" weight="duotone" />
-				<span>Neke je crklo, nema nijenog jela. <br /> Reči Gocu da je sjebal.</span>
-			</div>
-
-			<a
-				class="btn btn-outline btn-xs normal-case"
-				href="https://gableci.hr/vz/"
-				target="_blank"
-				rel="noreferrer nofollow"
-			>
-				Jæbiga, ideme ručno
-			</a>
-		</div>
-	{:else}
-		<div class:pb-40={!allowSubmit} class="flex flex-wrap gap-8 p-10 justify-center">
-			{#each value.restaurants as restaurant}
-				<div class="card w-full max-w-md bg-base-100 shadow-xl">
-					<div class="card-body">
-						<h2 class="card-title">{restaurant.name}</h2>
-						<div class="card-actions justify-between text-sm">
-							{#if restaurant.meta.url}
-								<a
+						<div class="font-normal text-gray-500 dark:text-gray-400 flex gap-8 leading-none">
+							{#if restaurant.meta.url && restaurant.meta.urlType === 'menu'}
+								<Button
+									color="alternative"
 									href={restaurant.meta.url}
 									target="_blank"
 									rel="noreferrer nofollow"
-									class="btn btn-xs normal-case flex items-center gap-2"
+									size="xs"
 								>
-									<ForkKnife color="currentColor" size="20" weight="duotone" />
-
-									Pogleč kaj ima
-								</a>
+									<div class="flex items-center gap-2 mt-auto">
+										<ForkKnife color="currentColor" size="20" weight="duotone" />
+										<span>Ponuda jela</span>
+									</div>
+								</Button>
 							{/if}
 
 							{#if restaurant.meta.phone}
-								<div class="flex items-center gap-2">
-									<Phone color="currentColor" size="20" weight="duotone" />
-									{restaurant.meta.phone}
-								</div>
+								<p class="flex items-center gap-2">
+									<Phone color="currentColor" size="24" weight="duotone" />
+									<span class="max-w-[13ch]">{restaurant.meta.phone}</span>
+								</p>
 							{/if}
 
 							{#if restaurant.meta.delivery}
-								<div class="flex items-center gap-2">
-									<Van color="currentColor" size="20" weight="duotone" />
+								<p class="flex items-center gap-2">
+									<Van color="currentColor" size="24" weight="duotone" />
 									{restaurant.meta.delivery}
-								</div>
+								</p>
 							{/if}
 						</div>
-						<div class="border-t border-t-base-300 mt-1.5 pt-2">
+
+						<div class="flex flex-col gap-2 mt-5">
 							{#each restaurant.meals as meal, i}
-								<div class="form-control">
-									<label class="label cursor-pointer">
-										<span class="label-text">
-											<span class="flex items-center gap-1">
-												{meal.name}
-
-												{#if meal?.meta?.isVegetarian}
+								<Checkbox custom bind:checked={selections[restaurant.slug][i]}>
+									<div
+										class="font-normal p-4 w-full text-gray-500 bg-white rounded-lg border-2 border-gray-200 cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 peer-checked:border-primary-600 hover:text-gray-600 dark:peer-checked:text-gray-300 peer-checked:text-gray-600 hover:bg-gray-50 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700"
+									>
+										<div
+											class="flex gap-2 mb-1"
+											class:hidden={!meal?.meta?.isVegetarian && !meal?.meta?.isVegan}
+										>
+											{#if meal?.meta?.isVegetarian}
 												<abrr title="Vegetarian">🥬</abrr>
-												{/if}
-
-												{#if meal?.meta?.isVegan}
-												<abrr title="Vegan">🌱</abrr>
-												{/if}
-											</span>
-
-											{#if meal.price}
-												<span class="badge badge-ghost mt-0.5 px-1.5 shrink-0">{meal.price}</span>
 											{/if}
-										</span>
-										<input
-											type="checkbox"
-											bind:checked={selections[restaurant.slug][i]}
-											class="checkbox checkbox-accent"
-										/>
-									</label>
-								</div>
+
+											{#if meal?.meta?.isVegan}
+												<abrr title="Vegan">🌱</abrr>
+											{/if}
+										</div>
+
+										<div class="w-full text-lg font-semibold flex items-center gap-2">
+											{meal.name}
+
+											{#if restaurant.meta.url && restaurant.meta.urlType === 'additional' && (meal?.isCustomItem ?? false)}
+												<Button
+													color="light"
+													href={restaurant.meta.url}
+													target="_blank"
+													rel="noreferrer nofollow"
+													class="!p-1"
+													size="xs"
+													outline
+												>
+													<ArrowSquareOut color="currentColor" size="18" weight="duotone" />
+												</Button>
+											{/if}
+										</div>
+
+										{#if meal.price}
+											<div class="w-full text-sm">
+												{meal.price}
+											</div>
+										{/if}
+									</div>
+								</Checkbox>
 							{/each}
 						</div>
-					</div>
-				</div>
-			{/each}
-		</div>
-
-		{#if allowSubmit}
-			<div transition:slide class="px-10 pt-10 pb-40 flex justify-center">
-				<div class="join">
-					<select class="select select-lg w-96 join-item" bind:value={yourName}>
-						<option disabled selected>Tu mi reči koji si</option>
-						{#each Object.entries(people) as [slug, name]}
-							<option value={slug}>{name}</option>
-						{/each}
-					</select>
-
-					<button
-						disabled={yourName?.trim()?.length < 1}
-						class="flex gap-2 btn btn-lg btn-primary normal-case join-item"
-						on:click={handleClick}
-					>
-						<PaperPlaneTilt color="currentColor" size="32" weight="duotone" />
-						Ideme
-					</button>
-				</div>
+					</Card>
+				{/each}
 			</div>
 		{/if}
-	{/if}
-{:catch error}
-	<div class="w-full py-40 flex flex-col gap-4 items-center justify-center">
-		<div class="alert alert-error text-white dark:text-black w-96">
-			<CloudX color="currentColor" size="24" weight="duotone" />
-			<span>Neke je crklo. Pogleč ispod.</span>
+	{:catch error}
+		<div class="w-full py-40 flex flex-col gap-4 items-center justify-center">
+			<Alert color="red" class="w-64 mx-auto">
+				<div class="flex items-center gap-3">
+					<CloudX color="currentColor" size="20" slot="icon" />
+					<span class="text-lg font-medium">Neke je crklo</span>
+				</div>
+				<p class="mt-2 mb-4 text-sm">
+					Ne znamo ni mi točno kaj je bilo, ali evo errora:
+
+					<details>
+						<summary>Klikni ovdje za detalje</summary>
+						<pre class="font-mono text-sm">{error.message}</pre>
+					</details>
+				</p>
+				<div class="flex gap-2">
+					<Button
+						size="xs"
+						color="red"
+						href="https://gableci.hr/vz/"
+						target="_blank"
+						rel="noreferrer nofollow"
+					>
+						Jæbiga, ideme ručno
+					</Button>
+				</div>
+			</Alert>
+		</div>
+	{/await}
+</div>
+
+{#if allowSubmit && yourName?.trim()?.length > 0}
+	<Banner
+		bannerType="bottom"
+		dismissable={false}
+		innerClass="container flex flex-wrap items-center justify-between px-4 md:px-8 gap-8"
+	>
+		<div class="flex items-center gap-2">
+			{#if yourName?.startsWith('ext')}
+				<Avatar class="mr-2">{yourName.replace('ext', 'G')}</Avatar>
+			{:else if Object.keys(people).includes(yourName)}
+				<Avatar src={`/profile-pictures/${yourName}.jpg`} class="mr-2" />
+			{:else}
+				<Avatar class="mr-2">?</Avatar>
+			{/if}
+
+			<P size="2xl">
+				{people[yourName]}
+			</P>
 		</div>
 
-		<pre class="font-mono text-sm">{error.message}</pre>
+		<div class="flex items-center gap-8">
+			<P size="lg" class="max-md:hidden">
+				Odabrano {numberOfSelections}
+				{numberOfSelections.toString().endsWith('1') ? 'jelo' : 'jela'}
+			</P>
 
-		<a
-			class="btn btn-outline btn-xs normal-case"
-			href="https://gableci.hr/vz/"
-			target="_blank"
-			rel="noreferrer nofollow"
-		>
-			Jæbiga, ideme ručno
-		</a>
-	</div>
-{/await}
+			<GradientButton color="lime" on:click={handleClick} shadow size="xl">
+				<div class="flex items-center gap-2">
+					<PaperPlaneTilt color="currentColor" size="20" weight="duotone" />
+					Ideme!
+				</div>
+			</GradientButton>
+		</div>
+	</Banner>
+{/if}

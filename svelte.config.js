@@ -10,7 +10,11 @@ const config = {
 		adapter: adapter()
 	},
 
-	preprocess: [vitePreprocess({})]
+	preprocess: [vitePreprocess({})],
+
+	ssr: {
+		noExternal: ['three']
+	},
 };
 
 export default config;

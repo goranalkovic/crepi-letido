@@ -65,17 +65,40 @@ export async function GET() {
 				meals: [
 					...output.meals,
 					{
-						name: 'Neakaj z dodatne ponude',
-						price: '-',
+						name: 'Nekaj z dodatne ponude',
 						meta: {
 							isVegetarian : false,
 							isVegan: false,
-						}
+						},
+						isCustomItem: true,
 					}
 				],
 				meta: {
 					...output.meta,
 					url: '/coral-dodatna-ponuda.pdf',
+					urlType: 'additional',
+				},
+			};
+		}
+
+		if (output.slug === 'restoran-august') {
+			output = {
+				...output,
+				meals: [
+					...output.meals,
+					{
+						name: 'Nekaj z dodatne ponude',
+						meta: {
+							isVegetarian : false,
+							isVegan: false,
+						},
+						isCustomItem: true,
+					}
+				],
+				meta: {
+					...output.meta,
+					url: 'https://glovoapp.com/hr/hr/varazdin/restoran-august/',
+					urlType: 'additional',
 				},
 			};
 		}
@@ -104,6 +127,7 @@ export async function GET() {
 			meta: {
 				url: 'http://bedem-varazdin.com/jelovnik/',
 				delivery: 'D',
+				urlType: 'menu',
 			}
 		},
 		{
@@ -118,6 +142,7 @@ export async function GET() {
 			meta: {
 				url: 'https://gastrocom-ugostiteljstvo.com/tjedna-ponuda-restorana-garestin/',
 				delivery: 'G',
+				urlType: 'menu',
 			},
 		},
 	];
