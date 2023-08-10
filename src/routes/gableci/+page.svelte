@@ -80,7 +80,7 @@
 	let yourName = '';
 
 	const handleClick = async () => {
-		const response = await fetch('/db', {
+		await fetch('/db', {
 			method: 'POST',
 			body: JSON.stringify({
 				name: yourName,
@@ -107,11 +107,14 @@
 			}
 		});
 
-		const data = await response.json();
-
 		goto('/gableci/results');
 	};
 </script>
+
+<svelte:head>
+	<title>Črepi letido | Gablec picker</title>
+	<meta name="description" content="Pick-a-gablec" />
+</svelte:head>
 
 <div
 	class="container flex flex-wrap justify-center md:justify-between items-center mx-auto px-8 gap-8 mb-10 pt-10 md:mb-20"

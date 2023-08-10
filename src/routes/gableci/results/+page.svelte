@@ -22,7 +22,8 @@
 		P,
 		Span,
 		Alert,
-		GradientButton
+		GradientButton,
+		Badge
 	} from 'flowbite-svelte';
 	import { goto } from '$app/navigation';
 
@@ -107,6 +108,11 @@
 	};
 </script>
 
+<svelte:head>
+	<title>Črepi letido | Gablec picker - Results</title>
+	<meta name="description" content="Picked-a-gablec" />
+</svelte:head>
+
 <div
 	class="container flex flex-wrap justify-center md:justify-between items-center mx-auto px-8 gap-8 mb-10 pt-10 md:mb-20"
 >
@@ -135,7 +141,7 @@
 				Uredi jela
 			</Button>
 			<Dropdown inline triggeredBy="#person-picker" class="w-48">
-				{#each Object.entries(people).filter(([slug]) => activeUsers.includes(slug)) as [slug, name]}
+				{#each Object.entries(people).filter( ([slug]) => activeUsers.includes(slug) ) as [slug, name]}
 					{#if slug === 'ext1'}
 						<DropdownDivider />
 					{/if}
@@ -181,10 +187,10 @@
 			{@const hasIntersect = Object.keys(intersects)?.length > 0}
 
 			{#if hasIntersect}
-			<Heading tag="h2" class="mx-auto py-10 font-display flex items-center gap-4">
-				<Intersect size='36' color='currentColor' weight='light' />
-				Intersecti
-			</Heading>
+				<Heading tag="h2" class="mx-auto py-10 font-display flex items-center gap-4">
+					<Intersect size="36" color="currentColor" weight="light" />
+					Intersecti
+				</Heading>
 
 				<div class="flex flex-col sm:grid sm:auto-rows-auto sm:grid-cols-fill-96 gap-8">
 					{#each Object.entries(intersects) as [restName, choices]}
@@ -250,19 +256,32 @@
 
 							<div class="flex flex-col gap-2 mt-5">
 								{#each choices as person}
-									<h3 class="text-base font-semibold mt-5 mb-1">{people[person]}</h3>
+									<div class="flex items-center gap-3 py-3 sm:py-4">
+										{#if person?.startsWith('ext')}
+											<Avatar>{person.replace('ext', 'G')}</Avatar>
+										{:else}
+											<Avatar src={`/profile-pictures/${person}.jpg`} />
+										{/if}
 
-									<ul class="text-xs leading-tight space-y-2">
+										<div class="flex-1 min-w-0">
+											<p class="text-sm font-semibold text-gray-900 truncate dark:text-white">
+												{people[person]}
+											</p>
+										</div>
+									</div>
+
+									<ul class="divide-y divide-gray-200 dark:divide-gray-700 w-full">
 										{#each rawData.choices[person][restName].split(',') as index}
 											{@const mealPrice = restData?.[restName]?.meals[index - 1]?.price
 												?.replace(/\(.*\s*\)/g, '')
 												?.trim()}
-											<li class="flex items-center justify-between gap-2">
-												{restData[restName].meals[index - 1].name}
 
-												{#if mealPrice}
-													<span class="badge badge-ghost mt-0.5 px-1.5 shrink-0">{mealPrice}</span>
-												{/if}
+											<li class="py-3 sm:py-4 flex gap-3 justify-between">
+												<p class="text-sm text-gray-500 truncate dark:text-gray-400">
+													{restData[restName].meals[index - 1].name}
+												</p>
+
+												<Badge border color="dark">{mealPrice}</Badge>
 											</li>
 										{/each}
 									</ul>
@@ -282,9 +301,8 @@
 				</Card>
 			{/if}
 
-
 			<Heading tag="h2" class="mx-auto py-10 font-display flex items-center gap-4">
-				<Exclude size='36' color='currentColor' weight='light' />
+				<Exclude size="36" color="currentColor" weight="light" />
 				{hasIntersect ? 'Ostali restorani' : 'Backup izbori'}
 			</Heading>
 
@@ -350,19 +368,32 @@
 
 						<div class="flex flex-col gap-2 my-5">
 							{#each choices as person}
-								<h3 class="text-base font-semibold mt-5 mb-1">{people[person]}</h3>
+								<div class="flex items-center gap-3 py-3 sm:py-4">
+									{#if person?.startsWith('ext')}
+										<Avatar>{person.replace('ext', 'G')}</Avatar>
+									{:else}
+										<Avatar src={`/profile-pictures/${person}.jpg`} />
+									{/if}
 
-								<ul class="text-xs leading-tight space-y-2">
+									<div class="flex-1 min-w-0">
+										<p class="text-sm font-semibold text-gray-900 truncate dark:text-white">
+											{people[person]}
+										</p>
+									</div>
+								</div>
+
+								<ul class="divide-y divide-gray-200 dark:divide-gray-700 w-full">
 									{#each rawData.choices[person][restName].split(',') as index}
 										{@const mealPrice = restData?.[restName]?.meals[index - 1]?.price
 											?.replace(/\(.*\s*\)/g, '')
 											?.trim()}
-										<li class="flex items-center justify-between gap-2">
-											{restData[restName].meals[index - 1].name}
 
-											{#if mealPrice}
-												<span class="badge badge-ghost mt-0.5 px-1.5 shrink-0">{mealPrice}</span>
-											{/if}
+										<li class="py-3 sm:py-4 flex gap-3 justify-between">
+											<p class="text-sm text-gray-500 truncate dark:text-gray-400">
+												{restData[restName].meals[index - 1].name}
+											</p>
+
+											<Badge border color="dark">{mealPrice}</Badge>
 										</li>
 									{/each}
 								</ul>

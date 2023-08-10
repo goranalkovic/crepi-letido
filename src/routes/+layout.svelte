@@ -11,7 +11,7 @@
 	const direction = data.url === '/gableci/results' ? 1 : -1;
 </script>
 
-<header class="my-8 mx-auto px-8 container sticky top-8">
+<header class="my-8 mx-auto px-8 container sticky top-8 z-10">
 	<GableciNavbar />
 </header>
 
