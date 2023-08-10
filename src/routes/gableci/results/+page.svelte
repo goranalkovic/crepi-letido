@@ -254,9 +254,9 @@
 								{/if}
 							</div>
 
-							<div class="flex flex-col gap-2 my-5 divide-y divide-gray-200 dark:divide-gray-700">
+							<div class="flex flex-col gap-2 mt-8 divide-y divide-gray-200 dark:divide-gray-700">
 								{#each choices as person}
-									<div>
+									<div class="pt-4 pb-2 last:pb-0">
 										<div class="flex items-center space-x-4">
 											{#if person?.startsWith('ext')}
 												<Avatar>{person.replace('ext', 'G')}</Avatar>
@@ -365,9 +365,9 @@
 							{/if}
 						</div>
 
-						<div class="flex flex-col gap-2 my-5 divide-y divide-gray-200 dark:divide-gray-700">
+						<div class="flex flex-col gap-2 mt-8 divide-y divide-gray-200 dark:divide-gray-700">
 							{#each choices as person}
-								<div>
+								<div class="pt-4 pb-2 last:pb-0">
 									<div class="flex items-center space-x-4">
 										{#if person?.startsWith('ext')}
 											<Avatar>{person.replace('ext', 'G')}</Avatar>
