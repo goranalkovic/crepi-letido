@@ -256,32 +256,34 @@
 
 							<div class="flex flex-col gap-2 my-5 divide-y divide-gray-200 dark:divide-gray-700">
 								{#each choices as person}
-									<div class="flex items-center space-x-4">
-										{#if person?.startsWith('ext')}
-											<Avatar>{person.replace('ext', 'G')}</Avatar>
-										{:else}
-											<Avatar src={`/profile-pictures/${person}.jpg`} />
-										{/if}
+									<div>
+										<div class="flex items-center space-x-4">
+											{#if person?.startsWith('ext')}
+												<Avatar>{person.replace('ext', 'G')}</Avatar>
+											{:else}
+												<Avatar src={`/profile-pictures/${person}.jpg`} />
+											{/if}
 
-										<div class="space-y-1 font-medium dark:text-white">
-											<div>{people[person]}</div>
+											<div class="space-y-1 font-medium dark:text-white">
+												<div>{people[person]}</div>
+											</div>
 										</div>
+
+										<ul class="w-full flex flex-col gap-3 sm:gap-4">
+											{#each rawData.choices[person][restName].split(',') as index}
+												{@const mealPrice = restData?.[restName]?.meals[index - 1]?.price
+													?.replace(/\(.*\s*\)/g, '')
+													?.trim()}
+
+												<li class="flex gap-2 justify-between">
+													<p class="text-base text-gray-500 truncate dark:text-gray-400">
+														{restData[restName].meals[index - 1].name}
+													</p>
+													<Badge large color="dark" class="shrink-0">{mealPrice}</Badge>
+												</li>
+											{/each}
+										</ul>
 									</div>
-
-									<ul class="w-full flex flex-col gap-3 sm:gap-4">
-										{#each rawData.choices[person][restName].split(',') as index}
-											{@const mealPrice = restData?.[restName]?.meals[index - 1]?.price
-												?.replace(/\(.*\s*\)/g, '')
-												?.trim()}
-
-											<li class="flex gap-2 justify-between">
-												<p class="text-base text-gray-500 truncate dark:text-gray-400">
-													{restData[restName].meals[index - 1].name}
-												</p>
-												<Badge large color="dark" class="shrink-0">{mealPrice}</Badge>
-											</li>
-										{/each}
-									</ul>
 								{/each}
 							</div>
 						</Card>
@@ -365,32 +367,34 @@
 
 						<div class="flex flex-col gap-2 my-5 divide-y divide-gray-200 dark:divide-gray-700">
 							{#each choices as person}
-								<div class="flex items-center space-x-4">
-									{#if person?.startsWith('ext')}
-										<Avatar>{person.replace('ext', 'G')}</Avatar>
-									{:else}
-										<Avatar src={`/profile-pictures/${person}.jpg`} />
-									{/if}
+								<div>
+									<div class="flex items-center space-x-4">
+										{#if person?.startsWith('ext')}
+											<Avatar>{person.replace('ext', 'G')}</Avatar>
+										{:else}
+											<Avatar src={`/profile-pictures/${person}.jpg`} />
+										{/if}
 
-									<div class="space-y-1 font-medium dark:text-white">
-										<div>{people[person]}</div>
+										<div class="space-y-1 font-medium dark:text-white">
+											<div>{people[person]}</div>
+										</div>
 									</div>
+
+									<ul class="w-full flex flex-col gap-3 sm:gap-4">
+										{#each rawData.choices[person][restName].split(',') as index}
+											{@const mealPrice = restData?.[restName]?.meals[index - 1]?.price
+												?.replace(/\(.*\s*\)/g, '')
+												?.trim()}
+
+											<li class="flex gap-2 justify-between">
+												<p class="text-base text-gray-500 truncate dark:text-gray-400">
+													{restData[restName].meals[index - 1].name}
+												</p>
+												<Badge large color="dark" class="shrink-0">{mealPrice}</Badge>
+											</li>
+										{/each}
+									</ul>
 								</div>
-
-								<ul class="w-full flex flex-col gap-3 sm:gap-4">
-									{#each rawData.choices[person][restName].split(',') as index}
-										{@const mealPrice = restData?.[restName]?.meals[index - 1]?.price
-											?.replace(/\(.*\s*\)/g, '')
-											?.trim()}
-
-										<li class="flex gap-2 justify-between">
-											<p class="text-base text-gray-500 truncate dark:text-gray-400">
-												{restData[restName].meals[index - 1].name}
-											</p>
-											<Badge large color="dark" class="shrink-0">{mealPrice}</Badge>
-										</li>
-									{/each}
-								</ul>
 							{/each}
 						</div>
 
