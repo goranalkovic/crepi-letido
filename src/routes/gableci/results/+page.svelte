@@ -278,7 +278,7 @@
 												<p class="text-base text-gray-500 truncate dark:text-gray-400">
 													{restData[restName].meals[index - 1].name}
 												</p>
-												<Badge color="dark" class="shrink-0">{mealPrice}</Badge>
+												<Badge large color="dark" class="shrink-0">{mealPrice}</Badge>
 											</li>
 										{/each}
 									</ul>
@@ -387,7 +387,7 @@
 											<p class="text-base text-gray-500 truncate dark:text-gray-400">
 												{restData[restName].meals[index - 1].name}
 											</p>
-											<Badge color="dark" class="shrink-0">{mealPrice}</Badge>
+											<Badge large color="dark" class="shrink-0">{mealPrice}</Badge>
 										</li>
 									{/each}
 								</ul>
