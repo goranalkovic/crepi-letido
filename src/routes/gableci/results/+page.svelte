@@ -368,7 +368,7 @@
 							{/if}
 						</div>
 
-						<div class="flex flex-col gap-2 mt-4 divide-y divide-gray-200 dark:divide-gray-700">
+						<div class="flex flex-col gap-2 my-4 divide-y divide-gray-200 dark:divide-gray-700">
 							{#each choices as person}
 								<div class="pt-4 pb-2">
 									<div class="flex items-center space-x-4 mb-2">
