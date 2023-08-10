@@ -26,16 +26,9 @@
 	</div>
 
 	<div class="flex items-center gap-2">
-		<span>
-			<Kbd class="px-2 py-1.5">Ctrl</Kbd>
-			+
-			<Kbd class="px-2 py-1.5"><Mouse size="16" color="currentColor" /></Kbd>
-		</span>
-		<span>
-			<Kbd class="px-2 py-1.5">Shift</Kbd>
-			+
-			<Kbd class="px-2 py-1.5"><Mouse size="16" color="currentColor" /></Kbd>
-		</span>
+		<Kbd class="px-2 py-1.5">Ctrl / Shift</Kbd>
+		+
+		<Kbd class="px-2 py-1.5"><Mouse size="16" color="currentColor" /></Kbd>
 		<span>Pan</span>
 	</div>
 
