@@ -274,11 +274,11 @@
 												?.replace(/\(.*\s*\)/g, '')
 												?.trim()}
 
-											<li class="flex flex-col gap-0.5">
-												<Badge color="dark">{mealPrice}</Badge>
+											<li class="flex gap-2 justify-between">
 												<p class="text-base text-gray-500 truncate dark:text-gray-400">
 													{restData[restName].meals[index - 1].name}
 												</p>
+												<Badge color="dark" class="shrink-0">{mealPrice}</Badge>
 											</li>
 										{/each}
 									</ul>
@@ -383,11 +383,11 @@
 											?.replace(/\(.*\s*\)/g, '')
 											?.trim()}
 
-										<li class="flex flex-col gap-0.5">
-											<Badge color="dark">{mealPrice}</Badge>
+										<li class="flex gap-2 justify-between">
 											<p class="text-base text-gray-500 truncate dark:text-gray-400">
 												{restData[restName].meals[index - 1].name}
 											</p>
+											<Badge color="dark" class="shrink-0">{mealPrice}</Badge>
 										</li>
 									{/each}
 								</ul>
