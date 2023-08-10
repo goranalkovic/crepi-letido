@@ -4,7 +4,8 @@
 	import Sun from 'phosphor-svelte/lib/Sun';
 	import Moon from 'phosphor-svelte/lib/Moon';
 
-	import { Navbar, NavBrand, NavLi, NavUl, NavHamburger, DarkMode } from 'flowbite-svelte';
+	import { Navbar, NavBrand, NavLi, NavUl, NavHamburger, DarkMode, Badge } from 'flowbite-svelte';
+
 	let darkmodebtn =
 		'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-lg';
 
@@ -33,6 +34,10 @@
 				GablecPicker
 			{/if}
 		</span>
+
+		{#if !isHome}
+			<Badge rounded border class="ml-2">BETA</Badge>
+		{/if}
 	</NavBrand>
 	<NavHamburger on:click={toggle} />
 	<NavUl {hidden}>
