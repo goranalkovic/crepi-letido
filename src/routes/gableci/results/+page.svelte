@@ -256,32 +256,29 @@
 
 							<div class="flex flex-col gap-2 mt-5">
 								{#each choices as person}
-									<div class="flex items-center gap-3 py-3 sm:py-4">
+									<div class="flex items-center space-x-4">
 										{#if person?.startsWith('ext')}
 											<Avatar>{person.replace('ext', 'G')}</Avatar>
 										{:else}
 											<Avatar src={`/profile-pictures/${person}.jpg`} />
 										{/if}
 
-										<div class="flex-1 min-w-0">
-											<p class="text-sm font-semibold text-gray-900 truncate dark:text-white">
-												{people[person]}
-											</p>
+										<div class="space-y-1 font-medium dark:text-white">
+											<div>{people[person]}</div>
 										</div>
 									</div>
 
-									<ul class="divide-y divide-gray-200 dark:divide-gray-700 w-full">
+									<ul class="w-full flex flex-col gap-3 sm:gap-4">
 										{#each rawData.choices[person][restName].split(',') as index}
 											{@const mealPrice = restData?.[restName]?.meals[index - 1]?.price
 												?.replace(/\(.*\s*\)/g, '')
 												?.trim()}
 
-											<li class="py-3 sm:py-4 flex gap-3 justify-between">
-												<p class="text-sm text-gray-500 truncate dark:text-gray-400">
+											<li class="flex flex-col gap-0.5">
+												<Badge color="dark">{mealPrice}</Badge>
+												<p class="text-base text-gray-500 truncate dark:text-gray-400">
 													{restData[restName].meals[index - 1].name}
 												</p>
-
-												<Badge border color="dark">{mealPrice}</Badge>
 											</li>
 										{/each}
 									</ul>
@@ -368,32 +365,29 @@
 
 						<div class="flex flex-col gap-2 my-5">
 							{#each choices as person}
-								<div class="flex items-center gap-3 py-3 sm:py-4">
+								<div class="flex items-center space-x-4">
 									{#if person?.startsWith('ext')}
 										<Avatar>{person.replace('ext', 'G')}</Avatar>
 									{:else}
 										<Avatar src={`/profile-pictures/${person}.jpg`} />
 									{/if}
 
-									<div class="flex-1 min-w-0">
-										<p class="text-sm font-semibold text-gray-900 truncate dark:text-white">
-											{people[person]}
-										</p>
+									<div class="space-y-1 font-medium dark:text-white">
+										<div>{people[person]}</div>
 									</div>
 								</div>
 
-								<ul class="divide-y divide-gray-200 dark:divide-gray-700 w-full">
+								<ul class="w-full flex flex-col gap-3 sm:gap-4">
 									{#each rawData.choices[person][restName].split(',') as index}
 										{@const mealPrice = restData?.[restName]?.meals[index - 1]?.price
 											?.replace(/\(.*\s*\)/g, '')
 											?.trim()}
 
-										<li class="py-3 sm:py-4 flex gap-3 justify-between">
-											<p class="text-sm text-gray-500 truncate dark:text-gray-400">
+										<li class="flex flex-col gap-0.5">
+											<Badge color="dark">{mealPrice}</Badge>
+											<p class="text-base text-gray-500 truncate dark:text-gray-400">
 												{restData[restName].meals[index - 1].name}
 											</p>
-
-											<Badge border color="dark">{mealPrice}</Badge>
 										</li>
 									{/each}
 								</ul>
