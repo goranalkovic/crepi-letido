@@ -310,8 +310,8 @@
 
 			<div class="flex flex-col sm:grid sm:auto-rows-auto sm:grid-cols-fill-96 gap-8">
 				{#each Object.entries(nonIntersects).sort((a, b) => b[1]?.length - a[1]?.length) as [restName, choices]}
-					<Card class="max-w-none">
-						<div class="flex items-center gap-4">
+					<Card class="max-w-none" padding='none'>
+						<div class="flex items-center gap-4 px-4 sm:px-6 pt-4 sm:pt-6">
 							<img
 								src={`/restaurant-icons/${restName}.png`}
 								alt={restData[restName].name}
@@ -370,7 +370,7 @@
 
 						<div class="flex flex-col gap-2 my-4 divide-y divide-gray-200 dark:divide-gray-700">
 							{#each choices as person}
-								<div class="pt-4 pb-2">
+								<div class="pt-4 pb-2 px-4 sm:px-6">
 									<div class="flex items-center space-x-4 mb-2">
 										{#if person?.startsWith('ext')}
 											<Avatar size="sm">{person.replace('ext', 'G')}</Avatar>
