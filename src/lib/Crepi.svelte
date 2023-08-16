@@ -12,7 +12,7 @@ Title: modular Roof tiles
 	import { T, forwardEventHandlers } from '@threlte/core';
 	import { useGltf, useSuspense } from '@threlte/extras';
 
-	import { Edges } from '@threlte/extras'
+	import { Edges } from '@threlte/extras';
 
 	export const ref = new Group();
 
@@ -30,8 +30,18 @@ Title: modular Roof tiles
 		<slot name="fallback" />
 	{:then gltf}
 		<T.Mesh geometry={gltf.nodes.Roof__0.geometry} rotation={[-Math.PI / 2, 0, 0]}>
-			<T.MeshPhysicalMaterial clearcoat={1} roughness={0.5} color={darkMode ? 'rebeccapurple' : 'blue'} />
-			<Edges color={darkMode ? 'white' : 'gray'} thresholdAngle={20} />
+			<T.MeshPhysicalMaterial
+				clearcoat={0.8}
+				side={2}
+				thickness={0.8}
+				reflectivity={1.5}
+				roughness={0}
+				transparent
+				opacity={0.82}
+				specularIntensity={0.82}
+				color={darkMode ? 'rebeccapurple' : 'blue'}
+			/>
+			<Edges color={darkMode ? 'gray' : 'cyan'} thresholdAngle={20} />
 		</T.Mesh>
 	{:catch error}
 		<slot name="error" {error} />

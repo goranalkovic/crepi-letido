@@ -52,10 +52,10 @@
 		<Crepi
 			{darkMode}
 			position={[2, 21, 20]}
-			scale={[0.15, 0.15, 0.15]}
+			scale={[0.15, -0.15, 0.15]}
 			rotation={[0, -0.005, -0.5]}
 		/>
-		<Crepi {darkMode} position={[23, 10, 20]} scale={[0.15, 0.15, 0.15]} rotation={[0, 0, 0.5]} />
+		<Crepi {darkMode} position={[23, 10, 20]} scale={[0.15, -0.15, 0.15]} rotation={[0, 0, 0.5]} />
 	</Suspense>
 </Float>
 <T.AmbientLight intensity={0.25} />
