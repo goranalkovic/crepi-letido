@@ -61,7 +61,7 @@
 					>
 					<span class="block truncate text-sm font-medium">{userData?.email}</span>
 				</div>
-				<DropdownItem href="/profile">
+				<DropdownItem href="/auth">
 					<div class="flex items-center gap-2 leading-none">
 						<UserCircle color="currentColor" size="16" />
 						Profile
@@ -76,7 +76,7 @@
 				</DropdownItem>
 			</Dropdown>
 		{:else}
-			<Button pill class="!p-2 aspect-square" href="/profile">
+			<Button pill class="!p-2 aspect-square" href="/auth">
 				<SignIn color="currentColor" size="22" weight="duotone" />
 			</Button>
 		{/if}
