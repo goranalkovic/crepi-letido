@@ -76,7 +76,7 @@
 	$: isLoggedIn = session?.user;
 
 	onMount(async () => {
-		if (!session.user) {
+		if (!session?.user) {
 			return;
 		}
 
