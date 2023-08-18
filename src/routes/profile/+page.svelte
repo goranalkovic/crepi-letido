@@ -35,9 +35,9 @@
 	const handleSignIn = async () => {
 		const { data, error } = await supabase.auth.signInWithOtp({
 			email: email,
-			// options: {
-			// 	emailRedirectTo: '/profile'
-			// }
+			options: {
+				emailRedirectTo: `${location.origin}/auth/callback`
+			}
 		});
 
 		signInStep++;
@@ -116,7 +116,7 @@
 
 		<Card padding="sm" class="w-80">
 			<div class="flex flex-col items-center pb-4">
-				{#if !avatar || (avatar?.length < 1)}
+				{#if !avatar || avatar?.length < 1}
 					<Avatar size="lg">{firstName?.charAt(0) ?? '👋'}{lastName?.charAt(0) ?? ''}</Avatar>
 				{:else}
 					<Avatar size="lg" src={`/profile-pictures/${avatar}.jpg`} />
