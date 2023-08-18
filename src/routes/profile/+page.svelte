@@ -1,4 +1,3 @@
-<!-- // src/routes/auth/+page.svelte -->
 <script>
 	// @ts-nocheck
 
