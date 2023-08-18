@@ -13,7 +13,7 @@ export const POST = async ({ request, locals: { supabase, getSession } }) => {
 
 	const { data: returnData, reqError } = await supabase
 		.from('selections')
-		.upsert({ email: session.user.email, selections: data });
+		.upsert({ email: session?.user?.email, selections: data });
 
 	if (reqError) {
 		throw error(500, reqError);

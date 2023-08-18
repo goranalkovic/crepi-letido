@@ -12,7 +12,7 @@ export const GET = async ({ locals: { supabase, getSession } }) => {
 	const { data, reqError } = await supabase
 		.from('selections')
 		.select()
-		.eq('email', session.user.email)
+		.eq('email', session?.user?.email)
 		.limit(1);
 
 	if (reqError) {

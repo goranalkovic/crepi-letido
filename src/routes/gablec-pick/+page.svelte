@@ -73,7 +73,7 @@
 	$: numberOfSelections = Object.values(selections)?.flat()?.filter(Boolean)?.length ?? false;
 	$: allowSubmit = Object.values(selections)?.some((r) => r.some((m) => m)) ?? false;
 
-	$: yourName = userData.email;
+	$: yourName = userData?.email;
 
 	const handleClick = async () => {
 		const selectionsToSend = Object.entries(selections)

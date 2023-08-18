@@ -61,7 +61,7 @@
 				intersectHelper: newIntersects,
 				choices: {
 					...current.choices,
-					[item.email]: item.selections
+					[item?.email]: item.selections
 				}
 			};
 		}, {});
@@ -110,7 +110,7 @@
 					[item.slug]: { name: item.name, meals: item.meals, meta: item.meta }
 				};
 			}, {}),
-			userData: userData.reduce((prev, curr) => ({ ...prev, [curr.email]: curr }), {})
+			userData: userData.reduce((prev, curr) => ({ ...prev, [curr?.email]: curr }), {})
 		};
 	};
 </script>

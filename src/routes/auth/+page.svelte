@@ -25,6 +25,7 @@
 		FloatingLabelInput
 	} from 'flowbite-svelte';
 	import { people } from '../people.js';
+	import { goto } from '$app/navigation';
 
 	export let data;
 	let { supabase, session } = data;
@@ -47,6 +48,8 @@
 
 	const handleSignOut = async () => {
 		await supabase.auth.signOut();
+
+		goto('/');
 	};
 
 	const handleUserDataUpdate = async () => {
@@ -59,7 +62,7 @@
 		});
 
 		const { error: upsertError } = await supabase.from('users').upsert({
-			email: session.user.email,
+			email: session?.user?.email,
 			firstName: firstName,
 			lastName: lastName,
 			avatar: avatar
@@ -126,7 +129,7 @@
 					{firstName ?? 'Hi, welcome'}
 					{lastName ?? 'to ČREPI'}
 				</h5>
-				<span class="text-sm text-gray-500 dark:text-gray-400">{session.user.email}</span>
+				<span class="text-sm text-gray-500 dark:text-gray-400">{session?.user?.email ?? 'email not found'}</span>
 				<div class="flex mt-4 space-x-3 lg:mt-6">
 					<Button on:click={handleSignOut}>Sign out</Button>
 					<Button on:click={() => (editModalOpen = true)} color="light" class="dark:text-white"
