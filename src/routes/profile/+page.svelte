@@ -31,14 +31,14 @@
 	let { supabase, session } = data;
 	$: ({ supabase, session } = data);
 
-	let email = 'alkovic.goran@gmail.com';
+	let email = '';
 
 	const handleSignIn = async () => {
 		const { data, error } = await supabase.auth.signInWithOtp({
 			email: email,
-			options: {
-				emailRedirectTo: '/profile'
-			}
+			// options: {
+			// 	emailRedirectTo: '/profile'
+			// }
 		});
 
 		signInStep++;
