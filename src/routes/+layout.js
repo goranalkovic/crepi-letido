@@ -5,8 +5,8 @@ export const load = async ({ fetch, data, depends, url }) => {
 	depends('supabase:auth')
 
 	const supabase = createSupabaseLoadClient({
-		supabaseUrl: PUBLIC_SUPABASE_URL,
-		supabaseKey: PUBLIC_SUPABASE_ANON_KEY,
+		supabaseUrl: PUBLIC_SUPABASE_URL ?? '',
+		supabaseKey: PUBLIC_SUPABASE_ANON_KEY ?? '',
 		event: { fetch },
 		serverSession: data?.session,
 	})
