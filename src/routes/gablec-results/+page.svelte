@@ -8,14 +8,10 @@
 	import Pencil from 'phosphor-svelte/lib/Pencil';
 	import Intersect from 'phosphor-svelte/lib/Intersect';
 
-	import { people } from '../people';
-
 	import {
 		Button,
-		Dropdown,
-		DropdownItem,
 		Avatar,
-		DropdownDivider,
+		Tooltip,
 		Spinner,
 		Card,
 		Heading,
@@ -25,19 +21,29 @@
 		GradientButton,
 		Badge
 	} from 'flowbite-svelte';
-	import { goto } from '$app/navigation';
+
+	export let data;
+
+	let { supabase, session, userData } = data;
+	$: ({ supabase, session, userData } = data);
 
 	let activeUsers = [];
 
 	const getData = async () => {
-		const response = await fetch('/db');
-		const { restData, dbData: data } = await response.json();
+		const response = await fetch('/api/get-gablec-data');
+		const data = await response.json();
 
 		if (data?.length < 1) {
 			return null;
 		}
 
-		activeUsers = data.map(({ name }) => name);
+		const restDataResponse = await fetch('/api/get-cached-gableci');
+		const { data: restData } = await restDataResponse.json();
+
+		const userDataResponse = await fetch('/api/get-all-users');
+		const userData = await userDataResponse.json();
+
+		activeUsers = data.map(({ email }) => email);
 
 		const mappedData = data?.reduce((current, item) => {
 			let newIntersects = { ...current.intersectHelper };
@@ -55,7 +61,7 @@
 				intersectHelper: newIntersects,
 				choices: {
 					...current.choices,
-					[item.name]: item.selections
+					[item.email]: item.selections
 				}
 			};
 		}, {});
@@ -103,7 +109,8 @@
 					...current,
 					[item.slug]: { name: item.name, meals: item.meals, meta: item.meta }
 				};
-			}, {})
+			}, {}),
+			userData: userData.reduce((prev, curr) => ({ ...prev, [curr.email]: curr }), {})
 		};
 	};
 </script>
@@ -134,34 +141,7 @@
 		</P>
 	</div>
 
-	<div>
-		{#if activeUsers?.length > 0}
-			<Button size="lg" color="light" id="person-picker" class="w-48 justify-start gap-2">
-				<Pencil color="currentColor" size="18" />
-				Uredi jela
-			</Button>
-			<Dropdown inline triggeredBy="#person-picker" class="w-48">
-				{#each Object.entries(people).filter( ([slug]) => activeUsers.includes(slug) ) as [slug, name]}
-					{#if slug === 'ext1'}
-						<DropdownDivider />
-					{/if}
-
-					<DropdownItem
-						class="flex items-center text-base font-semibold gap-2 hover:bg-gray-100 dark:hover:bg-gray-600"
-						on:click={() => goto(`/gableci?edit=${slug}`)}
-					>
-						{#if slug?.startsWith('ext')}
-							<Avatar size="xs">{slug.replace('ext', 'G')}</Avatar>
-						{:else}
-							<Avatar src={`/profile-pictures/${slug}.jpg`} size="xs" />
-						{/if}
-
-						<span>{name}</span>
-					</DropdownItem>
-				{/each}
-			</Dropdown>
-		{/if}
-	</div>
+	<div />
 </div>
 
 <div class="container mx-auto mb-10 md:mb-20 px-8">
@@ -177,20 +157,22 @@
 				<P weight="light" class="-mt-5 opacity-20 select-none">(cvrčki)</P>
 				<P size="5xl" class="font-display">Nitko nije odabral...</P>
 
-				<GradientButton href="/gableci" color="tealToLime" shadow size="xl">
+				<GradientButton href="/gablec-pick" color="tealToLime" shadow size="xl">
 					Promijeni to
 				</GradientButton>
 			</Card>
 		{:else}
-			{@const { rawData, intersects, nonIntersects, restData } = fetchedData}
+			{@const { rawData, intersects, nonIntersects, restData, userData } = fetchedData}
 			{@const allPickers = Object.keys(rawData.choices)}
 			{@const hasIntersect = Object.keys(intersects)?.length > 0}
 
 			{#if hasIntersect}
-				<Heading tag="h2" class="mx-auto py-10 font-display flex items-center gap-4">
-					<Intersect size="36" color="currentColor" weight="light" />
-					Intersecti
-				</Heading>
+				{#if nonIntersects?.length > 0}
+					<Heading tag="h2" class="mx-auto py-10 font-display flex items-center gap-4">
+						<Intersect size="36" color="currentColor" weight="light" />
+						Intersecti
+					</Heading>
+				{/if}
 
 				<div class="flex flex-col sm:grid sm:auto-rows-auto sm:grid-cols-fill-96 gap-8">
 					{#each Object.entries(intersects) as [restName, choices]}
@@ -256,16 +238,20 @@
 
 							<div class="flex flex-col gap-2 mt-4 divide-y divide-gray-200 dark:divide-gray-700">
 								{#each choices as person}
+									{@const firstName = userData[person].firstName}
+									{@const lastName = userData[person].lastName}
+									{@const avatar = userData[person].avatar}
+
 									<div class="pt-4 pb-2 last:pb-0">
 										<div class="flex items-center space-x-4 mb-2">
-											{#if person?.startsWith('ext')}
-												<Avatar size="sm">{person.replace('ext', 'G')}</Avatar>
+											{#if avatar?.length < 1}
+												<Avatar size="sm">{firstName.charAt(0)}{lastName.charAt(0)}</Avatar>
 											{:else}
-												<Avatar size="sm" src={`/profile-pictures/${person}.jpg`} />
+												<Avatar size="sm" src={`/profile-pictures/${avatar}.jpg`} />
 											{/if}
 
 											<div class="space-y-1 font-medium text-lg dark:text-white">
-												<div>{people[person]}</div>
+												<div>{firstName} {lastName}</div>
 											</div>
 										</div>
 
@@ -310,7 +296,7 @@
 
 			<div class="flex flex-col sm:grid sm:auto-rows-auto sm:grid-cols-fill-96 gap-8">
 				{#each Object.entries(nonIntersects).sort((a, b) => b[1]?.length - a[1]?.length) as [restName, choices]}
-					<Card class="max-w-none" padding='none'>
+					<Card class="max-w-none" padding="none">
 						<div class="flex items-center gap-4 px-4 sm:px-6 pt-4 sm:pt-6">
 							<img
 								src={`/restaurant-icons/${restName}.png`}
@@ -322,7 +308,9 @@
 							</h5>
 						</div>
 
-						<div class="font-normal text-gray-500 dark:text-gray-400 flex gap-8 leading-none px-4 sm:px-6">
+						<div
+							class="font-normal text-gray-500 dark:text-gray-400 flex gap-8 leading-none px-4 sm:px-6"
+						>
 							{#if restData[restName].meta.url && restData[restName].meta.urlType === 'menu'}
 								<Button
 									color="alternative"
@@ -368,18 +356,24 @@
 							{/if}
 						</div>
 
-						<div class="flex flex-col my-4 sm:my-6 border-y border-gray-200 dark:border-gray-700 divide-y divide-gray-200 dark:divide-gray-700">
+						<div
+							class="flex flex-col my-4 sm:my-6 border-y border-gray-200 dark:border-gray-700 divide-y divide-gray-200 dark:divide-gray-700"
+						>
 							{#each choices as person}
+								{@const firstName = userData[person].firstName}
+								{@const lastName = userData[person].lastName}
+								{@const avatar = userData[person].avatar}
+
 								<div class="py-4 px-4 sm:px-6">
 									<div class="flex items-center gap-4 mb-3">
-										{#if person?.startsWith('ext')}
-											<Avatar size="sm">{person.replace('ext', 'G')}</Avatar>
+										{#if avatar?.length < 1}
+											<Avatar size="sm">{firstName.charAt(0)}{lastName.charAt(0)}</Avatar>
 										{:else}
-											<Avatar size="sm" src={`/profile-pictures/${person}.jpg`} />
+											<Avatar size="sm" src={`/profile-pictures/${avatar}.jpg`} />
 										{/if}
 
 										<div class="font-medium text-lg dark:text-white">
-											{people[person]}
+											<div>{firstName} {lastName}</div>
 										</div>
 									</div>
 
@@ -408,11 +402,20 @@
 							<p class="font-display text-2xl mb-2">Intersect breakeri</p>
 							<div class="flex -space-x-2">
 								{#each allPickers.filter((p) => !choices.includes(p)) as missingPersonSlug}
-									{#if missingPersonSlug?.startsWith('ext')}
-										<Avatar>{missingPersonSlug.replace('ext', 'G')}</Avatar>
+									{@const firstName = userData[missingPersonSlug].firstName}
+									{@const lastName = userData[missingPersonSlug].lastName}
+									{@const avatar = userData[missingPersonSlug].avatar}
+									{@const fullName = `${firstName} ${lastName}`}
+
+									{#if !avatar || avatar?.length < 1}
+										<Avatar data-slug={missingPersonSlug}
+											>{firstName?.charAt(0) ?? '🤷'}{lastName?.charAt(0) ?? ''}</Avatar
+										>
 									{:else}
-										<Avatar src={`/profile-pictures/${missingPersonSlug}.jpg`} />
+										<Avatar data-slug={missingPersonSlug} src={`/profile-pictures/${avatar}.jpg`} />
 									{/if}
+
+									<Tooltip triggeredBy={`[data-slug="${missingPersonSlug}"]`}>{fullName}</Tooltip>
 								{/each}
 							</div>
 						</Alert>

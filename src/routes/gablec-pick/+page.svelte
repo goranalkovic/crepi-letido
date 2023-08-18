@@ -13,7 +13,7 @@
 	import CheckCircle from 'phosphor-svelte/lib/CheckCircle';
 	import User from 'phosphor-svelte/lib/User';
 
-	import { people } from './people';
+	import { people } from '../people';
 
 	import {
 		Button,
@@ -33,36 +33,32 @@
 	} from 'flowbite-svelte';
 	import { onMount } from 'svelte';
 
+	export let data;
+
+	let { supabase, session, userData } = data;
+	$: ({ supabase, session, userData } = data);
+
 	let selections = {};
 
 	onMount(async () => {
-		const isInEditMode = $page.url.searchParams.has('edit');
+		const response = await fetch('/api/get-person-selections');
+		const [dbData] = await response.json();
 
-		if (!isInEditMode) {
+		if (!dbData || (Array.isArray(dbData) && dbData?.length < 1)) {
 			return;
 		}
 
-		const userToEdit = $page.url.searchParams.get('edit');
-
-		const response = await fetch('/db');
-		const { dbData } = await response.json();
-
-		const dbUserData = dbData.find(({name}) => name === userToEdit);
-
-		if (!dbUserData) {
-			return;
-		}
-
-		yourName = userToEdit;
-
-		Object.entries(dbUserData.selections).forEach(([restaurantName, selectedIndexes]) => {
-			selectedIndexes.split(',').map((val) => parseInt(val)).forEach((ind) => selections[restaurantName][ind - 1] = true);
+		Object.entries(dbData.selections).forEach(([restaurantName, selectedIndexes]) => {
+			selectedIndexes
+				.split(',')
+				.map((val) => parseInt(val))
+				.forEach((ind) => (selections[restaurantName][ind - 1] = true));
 		});
 	});
 
 	const getData = async () => {
-		const response = await fetch('/get-gableci');
-		const data = await response.json();
+		const response = await fetch('/api/get-gableci');
+		const { data } = await response.json();
 
 		selections = data?.restaurants?.filter(Boolean)?.reduce((current, { slug, meals }) => {
 			return {
@@ -77,37 +73,37 @@
 	$: numberOfSelections = Object.values(selections)?.flat()?.filter(Boolean)?.length ?? false;
 	$: allowSubmit = Object.values(selections)?.some((r) => r.some((m) => m)) ?? false;
 
-	let yourName = '';
+	$: yourName = userData.email;
 
 	const handleClick = async () => {
-		await fetch('/db', {
-			method: 'POST',
-			body: JSON.stringify({
-				name: yourName,
-				selections: Object.entries(selections)
+		const selectionsToSend = Object.entries(selections)
+			?.filter(Boolean)
+			?.reduce((current, [key, value]) => {
+				const selections = value
+					?.map((item, i) => (item ? i + 1 : null))
 					?.filter(Boolean)
-					?.reduce((current, [key, value]) => {
-						const selections = value
-							?.map((item, i) => (item ? i + 1 : null))
-							?.filter(Boolean)
-							?.join(',');
+					?.join(',');
 
-						if (!selections || selections?.length < 1) {
-							return current;
-						}
+				if (!selections || selections?.length < 1) {
+					return current;
+				}
 
-						return {
-							...current,
-							[key]: selections
-						};
-					}, {})
-			}),
+				return {
+					...current,
+					[key]: selections
+				};
+			}, {});
+
+
+		await fetch('/api/set-gablec-data', {
+			method: 'POST',
+			body: JSON.stringify(selectionsToSend),
 			headers: {
 				'content-type': 'application/json'
 			}
 		});
 
-		goto('/gableci/results');
+		goto('/gablec-results');
 	};
 </script>
 
@@ -138,7 +134,7 @@
 	</div>
 
 	<div>
-		<Button size="lg" color="light" id="person-picker" class="w-48 justify-start">
+		<!-- <Button size="lg" color="light" id="person-picker" class="w-48 justify-start">
 			{#if yourName?.startsWith('ext')}
 				<Avatar class="mr-2">{yourName.replace('ext', 'G')}</Avatar>
 			{:else if Object.keys(people).includes(yourName)}
@@ -174,7 +170,7 @@
 					{/if}
 				</DropdownItem>
 			{/each}
-		</Dropdown>
+		</Dropdown> -->
 	</div>
 </div>
 
@@ -336,22 +332,25 @@
 </div>
 
 {#if allowSubmit && yourName?.trim()?.length > 0}
+	{@const avatar = userData.user_metadata.avatar}
+	{@const firstName = userData.user_metadata.firstName}
+	{@const lastName = userData.user_metadata.lastName}
+
 	<Banner
 		bannerType="bottom"
 		dismissable={false}
 		innerClass="container flex flex-wrap items-center justify-between px-4 md:px-8 gap-8"
 	>
 		<div class="flex items-center gap-2">
-			{#if yourName?.startsWith('ext')}
-				<Avatar class="mr-2">{yourName.replace('ext', 'G')}</Avatar>
-			{:else if Object.keys(people).includes(yourName)}
-				<Avatar src={`/profile-pictures/${yourName}.jpg`} class="mr-2" />
+			{#if Object.keys(people).includes(avatar)}
+				<Avatar src={`/profile-pictures/${avatar}.jpg`} class="mr-2" />
 			{:else}
-				<Avatar class="mr-2">?</Avatar>
+				<Avatar class="mr-2">{firstName.charAt(0)}{lastName.charAt(0)}</Avatar>
 			{/if}
 
 			<P size="2xl">
-				{people[yourName]}
+				{firstName}
+				{lastName}
 			</P>
 		</div>
 

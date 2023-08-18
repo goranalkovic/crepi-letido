@@ -13,3 +13,6 @@ vite.config.ts.timestamp-*
 
 # Local Netlify folder
 .netlify
+
+# Supabase local
+supabase

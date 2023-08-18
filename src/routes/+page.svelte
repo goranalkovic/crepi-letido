@@ -16,24 +16,3 @@
 		<CrepModel />
 	</Canvas>
 </div>
-
-<div
-	class="fixed bottom-5 left-5 z-10 pointer-events-none select-none flex flex-wrap items-center gap-8"
->
-	<div class="flex items-center gap-2">
-		<Kbd class="px-2 py-1.5"><Mouse size="16" color="currentColor" /></Kbd>
-		<span>Rotate/orbit</span>
-	</div>
-
-	<div class="flex items-center gap-2">
-		<Kbd class="px-2 py-1.5">Ctrl / Shift</Kbd>
-		+
-		<Kbd class="px-2 py-1.5"><Mouse size="16" color="currentColor" /></Kbd>
-		<span>Pan</span>
-	</div>
-
-	<div class="flex items-center gap-2">
-		<Kbd class="px-2 py-1.5"><MouseSimple size="16" color="currentColor" /></Kbd>
-		<span>Zoom</span>
-	</div>
-</div>
