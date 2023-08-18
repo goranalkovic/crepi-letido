@@ -76,6 +76,10 @@
 	$: isLoggedIn = session?.user;
 
 	onMount(async () => {
+		if (!session.user) {
+			return;
+		}
+
 		const {
 			data: {
 				user: { user_metadata: meta }
