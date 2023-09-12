@@ -6,6 +6,7 @@ export const people = {
 	jurica: "Jurica",
 	kanc: "KancIvan",
 	my10: "Majcen",
+	petarjadek: "Petar",
 	ext1: "Gost 1",
 	ext2: "Gost 2",
 	ext3: "Gost 3",
