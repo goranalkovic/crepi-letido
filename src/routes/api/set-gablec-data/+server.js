@@ -11,13 +11,47 @@ export const POST = async ({ request, locals: { supabase, getSession } }) => {
 
 	const data = await request.json();
 
-	const { data: returnData, reqError } = await supabase
+	const date = new Date();
+	const currentYear = date.getFullYear();
+	const currentDay = date.getDate().toString().padStart(2, '0');
+	const currentMonth = (date.getMonth() + 1).toString().padStart(2, '0');
+	const currentDate = `${currentYear}-${currentMonth}-${currentDay}`;
+
+	const email = session?.user?.email;
+
+	const { data: currentData } = await supabase
 		.from('selections')
-		.upsert({ email: session?.user?.email, selections: data });
+		.select()
+		.eq('created_at', currentDate)
+		.eq('email', email);
 
-	if (reqError) {
-		throw error(500, reqError);
+	if (currentData?.length > 0) {
+		const { data: reqData, error: reqError } = await supabase
+			.from('selections')
+			.update({ selections: data })
+			.eq('email', email)
+			.eq('created_at', currentDate)
+			.select();
+
+		if (reqError) {
+			throw error(500, reqError);
+		}
+
+		return json(reqData);
+	} else {
+		const { data: reqData, error: reqError } = await supabase
+			.from('selections')
+			.insert({
+				email: email,
+				selections: data,
+				'created_at': currentDate,
+			})
+			.select();
+
+		if (reqError) {
+			throw error(500, reqError);
+		}
+
+		return json(reqData);
 	}
-
-	return json(returnData);
 };

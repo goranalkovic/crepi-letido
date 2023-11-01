@@ -61,12 +61,16 @@
 			}
 		});
 
+		console.log({ updateData: data, updateError: error });
+
 		const { error: upsertError } = await supabase.from('users').upsert({
 			email: session?.user?.email,
 			firstName: firstName,
 			lastName: lastName,
 			avatar: avatar
 		});
+
+		console.log({ upsertError });
 
 		editModalOpen = false;
 	};
@@ -131,7 +135,9 @@
 					{firstName ?? 'Hi, welcome'}
 					{lastName ?? 'to ČREPI'}
 				</h5>
-				<span class="text-sm text-gray-500 dark:text-gray-400">{session?.user?.email ?? 'email not found'}</span>
+				<span class="text-sm text-gray-500 dark:text-gray-400"
+					>{session?.user?.email ?? 'email not found'}</span
+				>
 				<div class="flex mt-4 space-x-3 lg:mt-6">
 					<Button on:click={handleSignOut}>Sign out</Button>
 					<Button on:click={() => (editModalOpen = true)} color="light" class="dark:text-white"
@@ -192,7 +198,9 @@
 					<FloatingLabelInput type="email" label="E-mejl" bind:value={email} />
 				</div>
 
-				<Button class="shrink-0" color="primary" disabled={!emailValid} on:click={handleSignIn}>Ujdi</Button>
+				<Button class="shrink-0" color="primary" disabled={!emailValid} on:click={handleSignIn}
+					>Ujdi</Button
+				>
 			</Card>
 		{:else}
 			<P>Pogleč si mejl, bu ti medžik link stigel. Tam sam klikneš pa buš prijavljeni.</P>

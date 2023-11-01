@@ -20,7 +20,6 @@ export const GET = async ({ locals: { supabase, getSession } }) => {
 	const { data: existingData, error: cacheReqError } = await supabase.from('gablec-data').select().eq('updated', currentDate).eq('valid', true).limit(1).maybeSingle();
 
 	if (existingData && !Array.isArray(existingData) && !cacheReqError) {
-
 		return json(existingData);
 	}
 
@@ -201,7 +200,10 @@ export const GET = async ({ locals: { supabase, getSession } }) => {
 		veggieMeals: [],
 	};
 
-	const { data: returnedData, error: insReqError } = await supabase.from('gablec-data').insert({ data: outputData }).select().limit(1).maybeSingle();
+	const { data: returnedData, error: insReqError } = await supabase.from('gablec-data').insert({
+		data: outputData,
+		updated: currentDate,
+	 }).select().limit(1).maybeSingle();
 
 	if (insReqError) {
 		return json({

@@ -41,9 +41,9 @@
 
 	onMount(async () => {
 		const response = await fetch('/api/get-person-selections');
-		const [dbData] = await response.json();
+		let dbData = await response.json();
 
-		if (!dbData || (Array.isArray(dbData) && dbData?.length < 1)) {
+		if (!dbData) {
 			return;
 		}
 
