@@ -95,6 +95,8 @@
 
 	let editModalOpen = false;
 	let signInStep = 1;
+
+	$: emailValid = email?.length > 1 && /(.+)@(.+){2,}\.(.+){2,}/.test(email);
 </script>
 
 <svelte:head>
@@ -190,7 +192,7 @@
 					<FloatingLabelInput type="email" label="E-mejl" bind:value={email} />
 				</div>
 
-				<Button class="shrink-0" color="primary" on:click={handleSignIn}>Ujdi</Button>
+				<Button class="shrink-0" color="primary" disabled={!emailValid} on:click={handleSignIn}>Ujdi</Button>
 			</Card>
 		{:else}
 			<P>Pogleč si mejl, bu ti medžik link stigel. Tam sam klikneš pa buš prijavljeni.</P>
