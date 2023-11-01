@@ -1,7 +1,6 @@
 <script>
 	// @ts-nocheck
-	import { goto } from '$app/navigation';
-	import { page } from '$app/stores';
+	import { goto, invalidateAll } from '$app/navigation';
 
 	import Van from 'phosphor-svelte/lib/Van';
 	import Phone from 'phosphor-svelte/lib/Phone';
@@ -48,11 +47,21 @@
 			return;
 		}
 
+		if (dbData?.selections?.length < 1) {
+			return;
+		}
+
 		Object.entries(dbData.selections).forEach(([restaurantName, selectedIndexes]) => {
 			selectedIndexes
 				.split(',')
 				.map((val) => parseInt(val))
-				.forEach((ind) => (selections[restaurantName][ind - 1] = true));
+				.forEach((ind) => {
+					if (!selections || !selections[restaurantName] || !Array.isArray(selections[restaurantName])) {
+						return;
+					}
+
+					selections[restaurantName][ind - 1] = true;
+				});
 		});
 	});
 
@@ -60,18 +69,20 @@
 		const response = await fetch('/api/get-gableci');
 		const { data } = await response.json();
 
-		selections = data?.restaurants?.filter(Boolean)?.reduce((current, { slug, meals }) => {
-			return {
-				...current,
-				[slug]: Array(meals.length).fill(false)
-			};
-		}, {});
+		if (data) {
+			selections = data?.restaurants?.filter(Boolean)?.reduce((current, { slug, meals }) => {
+				return {
+					...current,
+					[slug]: Array(meals.length).fill(false)
+				};
+			}, {});
 
-		return data;
+			return data;
+		}
 	};
 
-	$: numberOfSelections = Object.values(selections)?.flat()?.filter(Boolean)?.length ?? false;
-	$: allowSubmit = Object.values(selections)?.some((r) => r.some((m) => m)) ?? false;
+	$: numberOfSelections = typeof selections === 'object' ? (Object.values(selections)?.flat()?.filter(Boolean)?.length ?? {}) : {};
+	$: allowSubmit = selections ? (Object.values(selections)?.some((r) => r.some((m) => m)) ?? false) : false;
 
 	$: yourName = userData?.email;
 
@@ -104,6 +115,11 @@
 		});
 
 		goto('/gablec-results');
+	};
+
+	const handleClearTodaysDataClick = async () => {
+		await fetch('/api/clear-todays-data');
+		invalidateAll();
 	};
 </script>
 
@@ -300,6 +316,15 @@
 				{/each}
 			</div>
 		{/if}
+
+		<div class="flex flex-col items-center gap-1 mt-20">
+			<Button outline pill color='red' size='sm' on:click={handleClearTodaysDataClick}>
+				Zbriši sve od denes
+			</Button>
+			<P class="font-light text-sm opacity-40">
+				(nema undo!)
+			</P>
+		</div>
 	{:catch error}
 		<div class="w-full py-40 flex flex-col gap-4 items-center justify-center">
 			<Alert color="red" class="w-64 mx-auto">

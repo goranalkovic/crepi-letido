@@ -10,10 +10,17 @@ export const GET = async ({ locals: { supabase, getSession } }) => {
 		throw error(401, { message: 'Unauthorized' });
 	}
 
+	const date = new Date();
+	const currentYear = date.getFullYear();
+	const currentDay = date.getDate().toString().padStart(2, '0');
+	const currentMonth = (date.getMonth() + 1).toString().padStart(2, '0');
+	const currentDate = `${currentYear}-${currentMonth}-${currentDay}`;
+
 	// Check if cached version exists.
-	const { data: existingData, error: cacheReqError } = await supabase.from('gablec-data').select().order('id', { ascending: false }).limit(1).maybeSingle();
+	const { data: existingData, error: cacheReqError } = await supabase.from('gablec-data').select().eq('updated', currentDate).eq('valid', true).limit(1).maybeSingle();
 
 	if (existingData && !Array.isArray(existingData) && !cacheReqError) {
+
 		return json(existingData);
 	}
 
@@ -194,14 +201,14 @@ export const GET = async ({ locals: { supabase, getSession } }) => {
 		veggieMeals: [],
 	};
 
-	const { error: insReqError } = await supabase.from('gablec-data').insert({ data: outputData });
+	const { data: returnedData, error: insReqError } = await supabase.from('gablec-data').insert({ data: outputData }).select().limit(1).maybeSingle();
 
 	if (insReqError) {
 		return json({
-			...outputData,
+			...returnedData,
 			cacheUpdateError: insReqError,
 		});
 	}
 
-	return json(outputData);
+	return json(returnedData);
 };

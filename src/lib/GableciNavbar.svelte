@@ -27,6 +27,8 @@
 	$: links = signedIn ? { ...baseLinks, ...loggedInLinks } : { ...baseLinks, ...nonLoggedInLinks };
 
 	$: isHome = $page.data.url === '/';
+
+	$: console.log($page.data.url)
 </script>
 
 <Navbar let:hidden let:toggle rounded color='dark' class='bg-opacity-90 dark:bg-opacity-80 backdrop-blur-lg backdrop-brightness-125 backdrop-saturate-150 border border-gray-200 dark:border-gray-700'>
