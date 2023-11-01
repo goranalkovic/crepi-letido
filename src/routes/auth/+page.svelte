@@ -141,7 +141,7 @@
 			</div>
 		</Card>
 
-		<Modal bind:open={editModalOpen} size="sm">
+		<Modal bind:open={editModalOpen} size="md">
 			<div class="flex flex-col gap-10">
 				<!-- <Icon name="exclamation-circle-outline" class="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200" /> -->
 				<h3 class="text-xl font-normal text-gray-500 dark:text-gray-400">Uredi si profila</h3>

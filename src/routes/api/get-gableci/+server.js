@@ -162,7 +162,8 @@ export const GET = async ({ locals: { supabase, getSession } }) => {
 			meta: {
 				url: 'http://bedem-varazdin.com/jelovnik/',
 				delivery: 'D',
-				urlType: 'menu'
+				urlType: 'menu',
+				phone: '042 557 545'
 			}
 		},
 		{
@@ -172,6 +173,16 @@ export const GET = async ({ locals: { supabase, getSession } }) => {
 			meta: {
 				url: 'https://gastrocom-ugostiteljstvo.com/tjedna-ponuda-restorana-garestin/',
 				delivery: 'G',
+				urlType: 'menu'
+			}
+		},
+		{
+			name: 'Restoran Barok (KTC)',
+			slug: 'restoran-barok-ext',
+			meals: [{ name: 'Meni 1' }, { name: 'Meni 2' }, { name: 'Meni 3' }, { name: 'Meni 4' }, { name: 'Meni 5' }],
+			meta: {
+				url: 'https://www.ktc.hr/tjedni_menu/tjedni-menu-restorana-barok-varazdin/',
+				delivery: 'On-location only',
 				urlType: 'menu'
 			}
 		}
