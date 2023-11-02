@@ -1,9 +1,7 @@
 <script>
 	import { Canvas } from '@threlte/core';
-	import { Kbd } from 'flowbite-svelte';
+	import { World } from '@threlte/rapier';
 	import CrepModel from '$lib/CrepModel.svelte';
-	import Mouse from 'phosphor-svelte/lib/Mouse';
-	import MouseSimple from 'phosphor-svelte/lib/MouseSimple';
 </script>
 
 <svelte:head>
@@ -13,6 +11,9 @@
 
 <div class="fixed inset-0">
 	<Canvas>
-		<CrepModel />
+
+		<World>
+			<CrepModel />
+		</World>
 	</Canvas>
 </div>

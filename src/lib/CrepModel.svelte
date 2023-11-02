@@ -1,12 +1,12 @@
 <script>
+	// @ts-nocheck
 	import { T } from '@threlte/core';
-	import { OrbitControls } from '@threlte/extras';
-	import { Suspense } from '@threlte/extras';
-	import Crepi from './Crepi.svelte';
-	import { Grid } from '@threlte/extras';
+	import { OrbitControls, Suspense, Grid, Sky } from '@threlte/extras';
 
 	import { Spinner, Card } from 'flowbite-svelte';
-	import { Float } from '@threlte/extras';
+
+	import { AutoColliders } from '@threlte/rapier';
+	import Emitter from './Emitter.svelte';
 
 	let darkMode = document?.documentElement?.classList?.contains('dark') ?? false;
 
@@ -16,7 +16,6 @@
 				return;
 			}
 
-			// @ts-ignore
 			const currentClassState = target?.classList?.contains('dark');
 
 			if (currentClassState !== darkMode) {
@@ -28,9 +27,19 @@
 	observer.observe(document.documentElement, { attributes: true });
 </script>
 
-<T.OrthographicCamera makeDefault position={[40, 40, 40]} rotation={[-44, -14, 4]} zoom={25}>
+<Sky
+	turbidity={darkMode ? 20 : 0.65}
+	rayleigh={darkMode ? 0.57 : 0.17}
+	azimuth={180}
+	elevation={darkMode ? -5 : 85}
+	mieCoefficient={darkMode ? 0.038 : 0.013}
+	exposure={darkMode ? 0.26 : 1}
+/>
+
+<T.PerspectiveCamera makeDefault position={[-95, 148, 60]} fov={25} zoom={1.65}>
 	<OrbitControls enableDamping />
-</T.OrthographicCamera>
+</T.PerspectiveCamera>
+
 <Grid
 	cellSize={0}
 	sectionSize={5}
@@ -41,21 +50,27 @@
 	infiniteGrid
 />
 
-<Float floatingRange={[-5, 5]} rotationIntensity={1} rotationSpeed={4} speed={8}>
-	<Suspense>
-		<div class="absolute inset-0" slot="fallback">
-			<Card padding="sm" shadow={false} rounded class="gap-4 items-center m-auto">
-				<Spinner size="20" />
-				<p class="text-xl dark:text-white">Črep se fčitava...</p>
-			</Card>
-		</div>
-		<Crepi
-			{darkMode}
-			position={[2, 21, 20]}
-			scale={[0.15, -0.15, 0.15]}
-			rotation={[0, -0.005, -0.5]}
-		/>
-		<Crepi {darkMode} position={[23, 10, 20]} scale={[0.15, -0.15, 0.15]} rotation={[0, 0, 0.5]} />
-	</Suspense>
-</Float>
-<T.AmbientLight intensity={0.25} />
+<Suspense>
+	<div class="absolute inset-0" slot="fallback">
+		<Card padding="sm" shadow={false} rounded class="gap-4 items-center m-auto">
+			<Spinner size="20" />
+			<p class="text-xl dark:text-white">Črep se fčitava...</p>
+		</Card>
+	</div>
+
+	<T.Group position={[0, 10, 0]} rotation={[0, 0, 10]}>
+		<AutoColliders shape="cuboid">
+			<T.Mesh receiveShadow position={[0, 0, 5]}>
+				<T.BoxGeometry args={[20, 0.125, 45]} />
+				<T.MeshPhysicalMaterial
+				roughness={1}
+				color={darkMode ? '#242834' : 'white'}
+				/>
+			</T.Mesh>
+		</AutoColliders>
+	</T.Group>
+
+	<Emitter />
+</Suspense>
+
+<T.SpotLight position={[0, 25, 30]} rotation={[-40,10,30]} castShadow />
