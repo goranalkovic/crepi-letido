@@ -319,10 +319,10 @@
 
 		<div class="flex flex-col items-center gap-1 mt-20">
 			<Button outline pill color='red' size='sm' on:click={handleClearTodaysDataClick}>
-				Zbriši sve od denes
+				Zbriši se o restoranima
 			</Button>
 			<P class="font-light text-sm opacity-40">
-				(nema undo!)
+				Potreban refresh nakon, nema undo!
 			</P>
 		</div>
 	{:catch error}
