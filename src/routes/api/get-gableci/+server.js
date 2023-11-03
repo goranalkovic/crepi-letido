@@ -185,10 +185,20 @@ export const GET = async ({ locals: { supabase, getSession } }) => {
 		{
 			name: 'Restoran Barok (KTC)',
 			slug: 'restoran-barok-ext',
-			meals: [{ name: 'Meni 1' }, { name: 'Meni 2' }, { name: 'Meni 3' }, { name: 'Meni 4' }, { name: 'Meni 5' }],
+			meals: [{ name: 'Ideme v restorana!' }],
 			meta: {
 				url: 'https://www.ktc.hr/tjedni_menu/tjedni-menu-restorana-barok-varazdin/',
 				delivery: 'On-location only',
+				urlType: 'menu'
+			}
+		},
+		{
+			name: 'McDonalds',
+			slug: 'mcdonalds-ext',
+			meals: [{ name: 'Nekaj z menija' }],
+			meta: {
+				url: 'https://glovoapp.com/hr/hr/varazdin/mcdonalds-vzd/',
+				delivery: 'Glovo/Wolt',
 				urlType: 'menu'
 			}
 		}
