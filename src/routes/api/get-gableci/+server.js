@@ -201,6 +201,46 @@ export const GET = async ({ locals: { supabase, getSession } }) => {
 				delivery: 'Glovo/Wolt',
 				urlType: 'menu'
 			}
+		},
+		{
+			name: 'Döner Kebab',
+			slug: 'doner-kebab-vz-ext',
+			meals: [{ name: 'Nekaj z menija' }],
+			meta: {
+				url: 'https://wolt.com/hr/hrv/varazdin/restaurant/dner-kebaab',
+				delivery: 'Wolt',
+				urlType: 'menu'
+			}
+		},
+		{
+			name: 'Kebab House kod Crnog',
+			slug: 'doner-kebab-vz-ext',
+			meals: [{ name: 'Nekaj z menija' }],
+			meta: {
+				url: 'https://wolt.com/hr/hrv/varazdin/restaurant/kod-crnog',
+				delivery: 'Wolt',
+				urlType: 'menu'
+			}
+		},
+		{
+			name: 'Keby Kebab House',
+			slug: 'keby-kebab-bar-ext',
+			meals: [{ name: 'Nekaj z menija' }],
+			meta: {
+				url: 'https://wolt.com/hr/hrv/varazdin/restaurant/keby-kebab-house',
+				delivery: 'Wolt',
+				urlType: 'menu'
+			}
+		},
+		{
+			name: 'Kebab Bar Fifty One',
+			slug: 'kebab-bar-51-ext',
+			meals: [{ name: 'Nekaj z menija' }],
+			meta: {
+				url: 'https://wolt.com/hr/hrv/varazdin/restaurant/kebab-bar-fifty-one',
+				delivery: 'Wolt',
+				urlType: 'menu'
+			}
 		}
 	];
 
