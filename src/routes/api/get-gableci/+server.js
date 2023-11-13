@@ -214,7 +214,7 @@ export const GET = async ({ locals: { supabase, getSession } }) => {
 		},
 		{
 			name: 'Kebab House kod Crnog',
-			slug: 'doner-kebab-vz-ext',
+			slug: 'kebab-kod-crnog-vz-ext',
 			meals: [{ name: 'Nekaj z menija' }],
 			meta: {
 				url: 'https://wolt.com/hr/hrv/varazdin/restaurant/kod-crnog',
